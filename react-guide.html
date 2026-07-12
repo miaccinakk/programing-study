@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>React для Junior — краткий мануал</title>
+<style>
+  :root {
+    --bg: #0f1220;
+    --bg-soft: #171a2b;
+    --card: #1c2036;
+    --card-2: #232842;
+    --border: #2c3252;
+    --text: #e7e9f3;
+    --muted: #9aa0bd;
+    --brand: #61dafb;      /* React cyan */
+    --brand-2: #38bdf8;
+    --accent: #f0b429;     /* внимание */
+    --danger: #ff6b6b;     /* важно/ошибки */
+    --ok: #4ade80;         /* хорошо */
+    --code-bg: #12152400;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 80% -10%, #1b2140 0%, transparent 60%), var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand-2); text-decoration: none; }
+  code, pre, .mono { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+
+  /* Layout */
+  .layout { display: grid; grid-template-columns: 260px 1fr; gap: 0; min-height: 100vh; }
+  .sidebar {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+    background: linear-gradient(180deg, var(--bg-soft), var(--bg));
+    border-right: 1px solid var(--border); padding: 24px 18px;
+  }
+  .content { padding: 40px clamp(20px, 5vw, 72px); max-width: 980px; }
+
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+  .brand svg { width: 40px; height: 40px; }
+  .brand h1 { font-size: 16px; margin: 0; letter-spacing: .3px; }
+  .brand span { display: block; font-size: 12px; color: var(--muted); font-weight: 400; }
+
+  nav a {
+    display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px;
+    color: var(--muted); font-size: 14px; margin-bottom: 2px; transition: .15s;
+  }
+  nav a:hover { background: var(--card); color: var(--text); }
+  nav a.active { background: var(--card-2); color: var(--brand); }
+  nav a .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .6; }
+  .nav-group { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7099; margin: 18px 12px 6px; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, rgba(97,218,251,.12), rgba(56,189,248,.04));
+    border: 1px solid var(--border); border-radius: 20px; padding: 34px; margin-bottom: 36px;
+    box-shadow: var(--shadow); position: relative; overflow: hidden;
+  }
+  .hero h2 { font-size: clamp(26px, 4vw, 38px); margin: 0 0 10px; line-height: 1.2; }
+  .hero p { color: var(--muted); max-width: 640px; margin: 0; font-size: 16px; }
+  .hero .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .pill {
+    font-size: 12px; padding: 6px 12px; border-radius: 999px;
+    background: var(--card-2); border: 1px solid var(--border); color: var(--text);
+  }
+  .hero .glow { position: absolute; right: -60px; top: -60px; width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(97,218,251,.25), transparent 70%); }
+
+  /* Sections */
+  section { margin-bottom: 44px; scroll-margin-top: 24px; }
+  section > h3 {
+    font-size: 24px; margin: 0 0 6px; display: flex; align-items: center; gap: 10px;
+  }
+  section > h3 .num {
+    font-size: 13px; background: var(--brand); color: #0a0d18; width: 26px; height: 26px;
+    display: grid; place-items: center; border-radius: 8px; font-weight: 700;
+  }
+  section > .lead { color: var(--muted); margin: 0 0 18px; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px 22px; margin-bottom: 16px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px){ .grid-2 { grid-template-columns: 1fr; } }
+
+  h4 { margin: 0 0 8px; font-size: 16px; }
+  p.small { color: var(--muted); font-size: 14px; }
+
+  /* Callouts / акценты */
+  .callout {
+    border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-size: 14.5px;
+    border-left: 4px solid; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .callout .ico { flex-shrink: 0; font-size: 18px; line-height: 1.4; }
+  .callout.tip    { background: rgba(74,222,128,.08);  border-color: var(--ok); }
+  .callout.warn   { background: rgba(240,180,41,.09);  border-color: var(--accent); }
+  .callout.danger { background: rgba(255,107,107,.09); border-color: var(--danger); }
+  .callout.key    { background: rgba(97,218,251,.09);  border-color: var(--brand); }
+  .callout b { color: var(--text); }
+
+  /* Code */
+  .code-wrap { position: relative; margin: 14px 0; }
+  pre {
+    background: #0b0e1a; border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 18px; overflow-x: auto; font-size: 13.5px; line-height: 1.7; margin: 0;
+  }
+  pre code { color: #cdd3f0; }
+  .tok-key { color: #c792ea; }
+  .tok-fn  { color: #82aaff; }
+  .tok-str { color: #c3e88d; }
+  .tok-com { color: #5a6187; font-style: italic; }
+  .tok-tag { color: #f07178; }
+  .tok-num { color: #f78c6c; }
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px; background: var(--card-2); border: 1px solid var(--border);
+    color: var(--muted); font-size: 11px; padding: 4px 10px; border-radius: 8px; cursor: pointer; transition:.15s;
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--brand); }
+
+  /* Accordion */
+  .acc { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 10px; background: var(--card); }
+  .acc-head {
+    width: 100%; text-align: left; background: none; border: 0; color: var(--text);
+    padding: 16px 18px; font-size: 15.5px; font-weight: 600; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .acc-head:hover { background: var(--card-2); }
+  .acc-head .chev { transition: .2s; color: var(--muted); }
+  .acc.open .acc-head .chev { transform: rotate(180deg); }
+  .acc-body { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .acc-body-inner { padding: 0 18px 18px; color: var(--muted); font-size: 14.5px; }
+  .acc-badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--border); color: var(--brand); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tab-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--muted);
+    padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 13.5px; transition:.15s;
+  }
+  .tab-btn.active { background: var(--brand); color: #0a0d18; border-color: var(--brand); font-weight: 600; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; margin: 0; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 8px; background: var(--card); cursor: pointer; transition:.15s;
+  }
+  .checklist li:hover { border-color: var(--brand); }
+  .checklist input { display: none; }
+  .checklist .box {
+    width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0;
+    display: grid; place-items: center; margin-top: 2px; transition:.15s; color: transparent; font-size: 12px;
+  }
+  .checklist li.done .box { background: var(--ok); border-color: var(--ok); color: #0a0d18; }
+  .checklist li.done .txt { color: var(--muted); text-decoration: line-through; }
+  .checklist .txt small { display:block; color: var(--muted); font-size: 12.5px; text-decoration: none; }
+
+  .progress-bar { height: 8px; background: var(--card-2); border-radius: 999px; overflow: hidden; margin: 8px 0 20px; }
+  .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--ok)); transition: width .3s; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 6px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--brand); font-weight: 600; }
+  td code { background: var(--card-2); padding: 2px 6px; border-radius: 6px; font-size: 12.5px; }
+
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 10px 0; }
+  @media (max-width:760px){ .flow { grid-template-columns: 1fr 1fr; } }
+  .flow .step { background: var(--card-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align:center; position: relative; }
+  .flow .step .n { color: var(--brand); font-size: 12px; font-weight: 700; }
+  .flow .step b { display:block; font-size: 14px; margin: 4px 0; }
+  .flow .step small { color: var(--muted); font-size: 12px; }
+
+  footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); padding-top: 24px; margin-top: 20px; }
+
+  .topbar-mobile { display: none; }
+  @media (max-width: 900px){
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .topbar-mobile {
+      display: flex; align-items:center; gap:10px; position: sticky; top:0; z-index: 20;
+      background: var(--bg-soft); border-bottom: 1px solid var(--border); padding: 14px 18px;
+    }
+    .topbar-mobile select { flex:1; background: var(--card); color: var(--text); border:1px solid var(--border); border-radius:10px; padding:8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="-11.5 -10.23 23 20.46" fill="none">
+        <circle r="2.05" fill="#61dafb"/>
+        <g stroke="#61dafb" stroke-width="1" fill="none">
+          <ellipse rx="11" ry="4.2"/>
+          <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
+          <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
+        </g>
+      </svg>
+      <div>
+        <h1>React Basics</h1>
+        <span>мануал для Junior</span>
+      </div>
+    </div>
+    <nav id="nav">
+      <div class="nav-group">Основы</div>
+      <a href="#what"><span class="dot"></span>Что такое React</a>
+      <a href="#how"><span class="dot"></span>Принцип работы</a>
+      <a href="#jsx"><span class="dot"></span>JSX</a>
+      <a href="#components"><span class="dot"></span>Компоненты</a>
+      <a href="#props-state"><span class="dot"></span>Props и State</a>
+      <div class="nav-group">Ядро</div>
+      <a href="#hooks"><span class="dot"></span>Хуки</a>
+      <a href="#lists"><span class="dot"></span>Списки и условия</a>
+      <a href="#events"><span class="dot"></span>События и формы</a>
+      <div class="nav-group">Экосистема</div>
+      <a href="#build"><span class="dot"></span>Сборка проекта</a>
+      <a href="#mistakes"><span class="dot"></span>Частые ошибки</a>
+      <a href="#checklist"><span class="dot"></span>Чек-лист Junior</a>
+    </nav>
+  </aside>
+
+  <!-- Mobile nav -->
+  <div class="topbar-mobile">
+    <strong style="color:var(--brand)">⚛ React Basics</strong>
+    <select onchange="location.hash=this.value">
+      <option value="#what">Что такое React</option>
+      <option value="#how">Принцип работы</option>
+      <option value="#jsx">JSX</option>
+      <option value="#components">Компоненты</option>
+      <option value="#props-state">Props и State</option>
+      <option value="#hooks">Хуки</option>
+      <option value="#lists">Списки и условия</option>
+      <option value="#events">События и формы</option>
+      <option value="#build">Сборка</option>
+      <option value="#mistakes">Ошибки</option>
+      <option value="#checklist">Чек-лист</option>
+    </select>
+  </div>
+
+  <!-- Content -->
+  <main class="content">
+    <div class="hero">
+      <div class="glow"></div>
+      <h2>React — коротко и по делу ⚛️</h2>
+      <p>Мини-справочник по базе, которую должен понимать junior-разработчик: как React устроен, зачем нужны компоненты, хуки и состояние, и как всё это собирается в готовое приложение.</p>
+      <div class="pills">
+        <span class="pill">Компоненты</span>
+        <span class="pill">JSX</span>
+        <span class="pill">Хуки</span>
+        <span class="pill">State</span>
+        <span class="pill">Virtual DOM</span>
+        <span class="pill">Vite / сборка</span>
+      </div>
+    </div>
+
+    <!-- 1 -->
+    <section id="what">
+      <h3><span class="num">1</span>Что такое React</h3>
+      <p class="lead">React — это <b>библиотека</b> (не фреймворк!) для построения пользовательских интерфейсов на JavaScript. Создана в Facebook (Meta).</p>
+      <div class="grid-2">
+        <div class="card">
+          <h4>🧩 Компонентный подход</h4>
+          <p class="small">UI разбивается на маленькие переиспользуемые кусочки — компоненты. Из них, как из кубиков LEGO, собирается вся страница.</p>
+        </div>
+        <div class="card">
+          <h4>🔁 Декларативность</h4>
+          <p class="small">Ты описываешь <i>как должен выглядеть UI</i> при определённом состоянии, а React сам обновляет экран. Не нужно вручную дёргать DOM.</p>
+        </div>
+      </div>
+      <div class="callout key">
+        <span class="ico">🔑</span>
+        <div><b>Главная идея:</b> UI = функция от состояния. <code>UI = f(state)</code>. Меняется состояние → React перерисовывает то, что нужно.</div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="how">
+      <h3><span class="num">2</span>Принцип работы: Virtual DOM</h3>
+      <p class="lead">React не трогает реальный DOM напрямую при каждом изменении — это медленно. Вместо этого он использует <b>Virtual DOM</b>.</p>
+      <div class="flow">
+        <div class="step"><div class="n">01</div><b>State меняется</b><small>например, клик по кнопке</small></div>
+        <div class="step"><div class="n">02</div><b>Новый Virtual DOM</b><small>React строит копию в памяти</small></div>
+        <div class="step"><div class="n">03</div><b>Diffing</b><small>сравнивает старую и новую версии</small></div>
+        <div class="step"><div class="n">04</div><b>Обновление</b><small>меняет в реальном DOM только разницу</small></div>
+      </div>
+      <div class="callout tip">
+        <span class="ico">✅</span>
+        <div>Благодаря этому React обновляет только <b>изменившиеся элементы</b>, а не всю страницу — отсюда высокая производительность.</div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="jsx">
+      <h3><span class="num">3</span>JSX — разметка внутри JS</h3>
+      <p class="lead">JSX — это синтаксис, который позволяет писать HTML-подобную разметку прямо в JavaScript. Браузер его не понимает — его компилирует сборщик.</p>
+      <div class="code-wrap">
+        <button class="copy-btn">Копировать</button>
+        <pre><code><span class="tok-key">const</span> name = <span class="tok-str">"Аня"</span>;
+
+<span class="tok-com">// JSX выглядит как HTML, но это JavaScript</span>
+<span class="tok-key">const</span> element = <span class="tok-tag">&lt;h1&gt;</span>Привет, {name}!<span class="tok-tag">&lt;/h1&gt;</span>;</code></pre>
+      </div>
+      <div class="callout warn">
+        <span class="ico">⚠️</span>
+        <div><b>Что нужно запомнить про JSX:</b>
+          <ul style="margin:8px 0 0; padding-left:18px;">
+            <li>Вместо <code>class</code> пишем <code>className</code></li>
+            <li>JavaScript внутри разметки — в фигурных скобках <code>{ }</code></li>
+            <li>Компонент должен возвращать <b>один родительский элемент</b> (или <code>&lt;&gt;...&lt;/&gt;</code> — фрагмент)</li>
+            <li>Все теги закрываются: <code>&lt;img /&gt;</code>, <code>&lt;br /&gt;</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="components">
+      <h3><span class="num">4</span>Компоненты</h3>
+      <p class="lead">Современный React — это <b>функциональные компоненты</b>. Это просто функция, которая возвращает JSX. Имя обязательно с <b>Большой буквы</b>.</p>
+      <div class="code-wrap">
+        <button class="copy-btn">Копировать</button>
+        <pre><code><span class="tok-key">function</span> <span class="tok-fn">Welcome</span>() {
+  <span class="tok-key">return</span> <span class="tok-tag">&lt;h1&gt;</span>Привет 👋<span class="tok-tag">&lt;/h1&gt;</span>;
+}
+
+<span class="tok-com">// использование как обычный HTML-тег</span>
+<span class="tok-key">function</span> <span class="tok-fn">App</span>() {
+  <span class="tok-key">return</span> (
+    <span class="tok-tag">&lt;div&gt;</span>
+      <span class="tok-tag">&lt;Welcome /&gt;</span>
+      <span class="tok-tag">&lt;Welcome /&gt;</span>
+    <span class="tok-tag">&lt;/div&gt;</span>
+  );
+}</code></pre>
+      </div>
+      <div class="callout tip"><span class="ico">💡</span><div>Один компонент = один файл. Хорошая практика — маленькие компоненты, каждый отвечает за что-то одно.</div></div>
+    </section>
+
+    <!-- 5 -->
+    <section id="props-state">
+      <h3><span class="num">5</span>Props и State — самое важное 🎯</h3>
+      <p class="lead">Это два способа работать с данными. Понимание разницы — база всего React.</p>
+      <table>
+        <tr><th>Props</th><th>State</th></tr>
+        <tr>
+          <td>Данные <b>снаружи</b>, от родителя</td>
+          <td>Данные <b>внутри</b> компонента</td>
+        </tr>
+        <tr>
+          <td>Только для чтения (нельзя менять)</td>
+          <td>Можно менять через <code>setState</code></td>
+        </tr>
+        <tr>
+          <td>Как аргументы функции</td>
+          <td>Изменение → перерисовка компонента</td>
+        </tr>
+      </table>
+      <div class="grid-2" style="margin-top:16px;">
+        <div class="code-wrap">
+          <button class="copy-btn">Копировать</button>
+          <pre><code><span class="tok-com">// PROPS — передаём данные вниз</span>
+<span class="tok-key">function</span> <span class="tok-fn">Hello</span>({ name }) {
+  <span class="tok-key">return</span> <span class="tok-tag">&lt;p&gt;</span>Привет, {name}<span class="tok-tag">&lt;/p&gt;</span>;
+}
+
+<span class="tok-tag">&lt;Hello</span> name=<span class="tok-str">"Макс"</span> <span class="tok-tag">/&gt;</span></code></pre>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn">Копировать</button>
+          <pre><code><span class="tok-com">// STATE — данные, что меняются</span>
+<span class="tok-key">const</span> [count, setCount] = <span class="tok-fn">useState</span>(<span class="tok-num">0</span>);
+
+<span class="tok-tag">&lt;button</span> onClick={() =&gt; <span class="tok-fn">setCount</span>(count + <span class="tok-num">1</span>)}<span class="tok-tag">&gt;</span>
+  Кликов: {count}
+<span class="tok-tag">&lt;/button&gt;</span></code></pre>
+        </div>
+      </div>
+      <div class="callout danger">
+        <span class="ico">🚫</span>
+        <div><b>Никогда не меняй state напрямую!</b> <code>count = 5</code> — так нельзя. Только через сеттер: <code>setCount(5)</code>. Иначе React не узнает об изменении и не перерисует UI.</div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="hooks">
+      <h3><span class="num">6</span>Хуки (Hooks)</h3>
+      <p class="lead">Хуки — это функции, которые «подключают» к компоненту возможности React (состояние, побочные эффекты и т.д.). Все начинаются со слова <code>use</code>.</p>
+
+      <div class="tabs" id="hooksTabs">
+        <button class="tab-btn active" data-tab="h1">useState</button>
+        <button class="tab-btn" data-tab="h2">useEffect</button>
+        <button class="tab-btn" data-tab="h3">useContext</button>
+        <button class="tab-btn" data-tab="h4">useRef</button>
+      </div>
+
+      <div class="tab-panel active" data-panel="h1">
+        <div class="card">
+          <h4>useState — хранит состояние</h4>
+          <p class="small">Возвращает пару: текущее значение и функцию для его изменения.</p>
+          <div class="code-wrap"><button class="copy-btn">Копировать</button>
+          <pre><code><span class="tok-key">const</span> [value, setValue] = <span class="tok-fn">useState</span>(<span class="tok-str">""</span>);
+<span class="tok-fn">setValue</span>(<span class="tok-str">"новое значение"</span>); <span class="tok-com">// перерисует компонент</span></code></pre></div>
+        </div>
+      </div>
+      <div class="tab-panel" data-panel="h2">
+        <div class="card">
+          <h4>useEffect — побочные эффекты</h4>
+          <p class="small">Запросы к API, таймеры, подписки. Запускается после рендера. Массив зависимостей контролирует, когда он срабатывает.</p>
+          <div class="code-wrap"><button class="copy-btn">Копировать</button>
+          <pre><code><span class="tok-fn">useEffect</span>(() =&gt; {
+  console.<span class="tok-fn">log</span>(<span class="tok-str">"запустится при изменении id"</span>);
+}, [id]); <span class="tok-com">// [] = только один раз при монтировании</span></code></pre></div>
+          <div class="callout warn" style="margin-bottom:0"><span class="ico">⚠️</span><div>Пустой массив <code>[]</code> → эффект один раз. Нет массива → каждый рендер (осторожно, легко словить бесконечный цикл).</div></div>
+        </div>
+      </div>
+      <div class="tab-panel" data-panel="h3">
+        <div class="card">
+          <h4>useContext — общие данные</h4>
+          <p class="small">Позволяет передавать данные глубоко вниз без «прокидывания» props через каждый уровень (тема, текущий юзер, язык).</p>
+          <div class="code-wrap"><button class="copy-btn">Копировать</button>
+          <pre><code><span class="tok-key">const</span> theme = <span class="tok-fn">useContext</span>(ThemeContext);</code></pre></div>
+        </div>
+      </div>
+      <div class="tab-panel" data-panel="h4">
+        <div class="card">
+          <h4>useRef — ссылка без перерисовки</h4>
+          <p class="small">Хранит значение между рендерами и даёт прямой доступ к DOM-элементу. Изменение ref НЕ вызывает перерисовку.</p>
+          <div class="code-wrap"><button class="copy-btn">Копировать</button>
+          <pre><code><span class="tok-key">const</span> inputRef = <span class="tok-fn">useRef</span>(<span class="tok-key">null</span>);
+inputRef.current.<span class="tok-fn">focus</span>();</code></pre></div>
+        </div>
+      </div>
+
+      <div class="callout danger">
+        <span class="ico">📏</span>
+        <div><b>Правила хуков (важно на собесе!):</b>
+          <ul style="margin:8px 0 0; padding-left:18px;">
+            <li>Вызывать <b>только на верхнем уровне</b> компонента — не в циклах, условиях или вложенных функциях.</li>
+            <li>Вызывать <b>только внутри React-компонентов</b> или своих кастомных хуков.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section id="lists">
+      <h3><span class="num">7</span>Списки и условный рендер</h3>
+      <div class="code-wrap"><button class="copy-btn">Копировать</button>
+      <pre><code><span class="tok-com">// Списки — через map, обязателен key!</span>
+{users.<span class="tok-fn">map</span>((user) =&gt; (
+  <span class="tok-tag">&lt;li</span> key={user.id}<span class="tok-tag">&gt;</span>{user.name}<span class="tok-tag">&lt;/li&gt;</span>
+))}
+
+<span class="tok-com">// Условие — тернарник или &&</span>
+{isLoggedIn ? <span class="tok-tag">&lt;Profile /&gt;</span> : <span class="tok-tag">&lt;Login /&gt;</span>}
+{hasError && <span class="tok-tag">&lt;Error /&gt;</span>}</code></pre></div>
+      <div class="callout warn"><span class="ico">🔑</span><div><b>key</b> — уникальный идентификатор элемента списка. Помогает React понять, что изменилось. <b>Не используй индекс массива</b> как key, если список может меняться.</div></div>
+    </section>
+
+    <!-- 8 -->
+    <section id="events">
+      <h3><span class="num">8</span>События и формы</h3>
+      <div class="code-wrap"><button class="copy-btn">Копировать</button>
+      <pre><code><span class="tok-com">// События — camelCase, передаём функцию</span>
+<span class="tok-tag">&lt;button</span> onClick={handleClick}<span class="tok-tag">&gt;</span>Жми<span class="tok-tag">&lt;/button&gt;</span>
+
+<span class="tok-com">// Контролируемый input — значение живёт в state</span>
+<span class="tok-key">const</span> [text, setText] = <span class="tok-fn">useState</span>(<span class="tok-str">""</span>);
+
+<span class="tok-tag">&lt;input</span>
+  value={text}
+  onChange={(e) =&gt; <span class="tok-fn">setText</span>(e.target.value)}
+<span class="tok-tag">/&gt;</span></code></pre></div>
+      <div class="callout tip"><span class="ico">💡</span><div>Пиши <code>onClick={handleClick}</code>, а НЕ <code>onClick={handleClick()}</code> — второе вызовет функцию сразу при рендере.</div></div>
+    </section>
+
+    <!-- 9 -->
+    <section id="build">
+      <h3><span class="num">9</span>Сборка проекта</h3>
+      <p class="lead">Браузер не понимает JSX и модули напрямую — их нужно «собрать» в обычный JS. Этим занимается сборщик (bundler).</p>
+
+      <div class="acc-group">
+        <div class="acc open">
+          <button class="acc-head">⚡ Vite <span class="acc-badge">рекомендуется</span></button>
+          <div class="acc-body"><div class="acc-body-inner">
+            Современный стандарт для старта. Очень быстрый dev-сервер и мгновенный hot-reload.
+            <div class="code-wrap"><button class="copy-btn">Копировать</button>
+            <pre><code>npm create vite@latest my-app -- --template react
+cd my-app
+npm install
+npm run dev</code></pre></div>
+          </div></div>
+        </div>
+        <div class="acc">
+          <button class="acc-head">▲ Next.js <span class="chev">▾</span></button>
+          <div class="acc-body"><div class="acc-body-inner">
+            Фреймворк поверх React: роутинг, серверный рендеринг (SSR), API-роуты «из коробки». Часто используется в продакшене.
+          </div></div>
+        </div>
+        <div class="acc">
+          <button class="acc-head">📦 Что делает сборщик <span class="chev">▾</span></button>
+          <div class="acc-body"><div class="acc-body-inner">
+            <b>Babel</b> — превращает JSX и новый JS в понятный браузерам код. <b>Bundler</b> (Vite/Webpack) — собирает все файлы и зависимости в оптимизированные бандлы, минифицирует, следит за изменениями.
+          </div></div>
+        </div>
+        <div class="acc">
+          <button class="acc-head">🗂 Ключевые команды npm <span class="chev">▾</span></button>
+          <div class="acc-body"><div class="acc-body-inner">
+            <table>
+              <tr><th>Команда</th><th>Что делает</th></tr>
+              <tr><td><code>npm install</code></td><td>ставит зависимости из package.json</td></tr>
+              <tr><td><code>npm run dev</code></td><td>запускает локальный сервер разработки</td></tr>
+              <tr><td><code>npm run build</code></td><td>собирает продакшн-версию</td></tr>
+            </table>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="mistakes">
+      <h3><span class="num">10</span>Частые ошибки новичков</h3>
+      <div class="callout danger"><span class="ico">1️⃣</span><div>Мутируют state напрямую вместо <code>setState</code> / <code>setX</code>.</div></div>
+      <div class="callout danger"><span class="ico">2️⃣</span><div>Забывают <code>key</code> в списках или ставят индекс массива.</div></div>
+      <div class="callout danger"><span class="ico">3️⃣</span><div>Бесконечный цикл в <code>useEffect</code> из-за отсутствия массива зависимостей.</div></div>
+      <div class="callout danger"><span class="ico">4️⃣</span><div>Вызывают хуки внутри условий или циклов.</div></div>
+      <div class="callout danger"><span class="ico">5️⃣</span><div>Пишут <code>onClick={fn()}</code> вместо <code>onClick={fn}</code>.</div></div>
+    </section>
+
+    <!-- Checklist -->
+    <section id="checklist">
+      <h3><span class="num">✓</span>Чек-лист: что должен знать Junior</h3>
+      <p class="lead">Отмечай пункты — прогресс сохранится в браузере. Это тот минимум, который стоит уверенно понимать.</p>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <ul class="checklist" id="checklist">
+        <li><span class="box">✔</span><span class="txt">Понимаю, что React — библиотека для UI и что такое компонент<small>компонентный и декларативный подход</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Знаю, зачем нужен Virtual DOM<small>как React обновляет только изменившееся</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Умею писать JSX и его правила<small>className, {}, один родитель, закрытые теги</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Различаю Props и State<small>props — снаружи и readonly, state — внутри и меняется</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Владею useState и useEffect<small>основные хуки + массив зависимостей</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Знаю правила хуков<small>только на верхнем уровне, только в компонентах</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Рендерю списки через map с key и условный рендер<small>тернарник и &&</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Работаю с событиями и контролируемыми формами<small>onChange, value в state</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Могу поднять проект через Vite и знаю npm-команды<small>install / dev / build</small></span></li>
+        <li><span class="box">✔</span><span class="txt">Знаю базовые ошибки и как их избегать<small>мутация state, key, циклы в useEffect</small></span></li>
+      </ul>
+      <div class="callout key" id="doneMsg" style="display:none"><span class="ico">🎉</span><div><b>Отлично!</b> Базу для junior React ты закрыл. Дальше: React Router, работа с API (fetch/axios), стейт-менеджмент и TypeScript.</div></div>
+    </section>
+
+    <footer>
+      ⚛️ Краткий мануал по основам React · для junior-разработчиков · открывается офлайн в любом браузере.
+    </footer>
+  </main>
+</div>
+
+<script>
+  // ---- Copy buttons ----
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.parentElement.querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Скопировано ✓';
+        setTimeout(() => btn.textContent = old, 1400);
+      });
+    });
+  });
+
+  // ---- Accordions ----
+  document.querySelectorAll('.acc-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const acc = head.parentElement;
+      const body = acc.querySelector('.acc-body');
+      const isOpen = acc.classList.toggle('open');
+      body.style.maxHeight = isOpen ? body.scrollHeight + 'px' : 0;
+    });
+  });
+  // open the first accordion by default
+  document.querySelectorAll('.acc.open .acc-body').forEach(b => b.style.maxHeight = b.scrollHeight + 'px');
+
+  // ---- Tabs ----
+  const tabs = document.querySelectorAll('#hooksTabs .tab-btn');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.tab-panel[data-panel="'+ t.dataset.tab +'"]').classList.add('active');
+  }));
+
+  // ---- Checklist with localStorage ----
+  const items = document.querySelectorAll('#checklist li');
+  const fill = document.getElementById('progressFill');
+  const doneMsg = document.getElementById('doneMsg');
+  const KEY = 'react-junior-checklist';
+  let saved = JSON.parse(localStorage.getItem(KEY) || '[]');
+
+  function update() {
+    let done = 0;
+    items.forEach((li, i) => {
+      if (li.classList.contains('done')) done++;
+    });
+    const pct = Math.round(done / items.length * 100);
+    fill.style.width = pct + '%';
+    doneMsg.style.display = (done === items.length) ? 'flex' : 'none';
+    localStorage.setItem(KEY, JSON.stringify([...items].map(li => li.classList.contains('done'))));
+  }
+
+  items.forEach((li, i) => {
+    if (saved[i]) li.classList.add('done');
+    li.addEventListener('click', () => {
+      li.classList.toggle('done');
+      update();
+    });
+  });
+  update();
+
+  // ---- Active nav on scroll ----
+  const navLinks = document.querySelectorAll('#nav a');
+  const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href')));
+  window.addEventListener('scroll', () => {
+    let idx = 0;
+    sections.forEach((s, i) => { if (s && s.getBoundingClientRect().top <= 120) idx = i; });
+    navLinks.forEach(a => a.classList.remove('active'));
+    if (navLinks[idx]) navLinks[idx].classList.add('active');
+  });
+</script>
+</body>
+</html>
