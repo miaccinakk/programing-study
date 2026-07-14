@@ -9,11 +9,25 @@ const calloutStyles = {
   danger: { icon: Ban, cls: "border-danger/70 bg-danger/10", ic: "text-danger" },
 } as const
 
-export function BlockRenderer({ block, id }: { block: Block; id?: string }) {
+// Нумерованный бейдж секции (как .num в react-guide.html)
+function NumBadge({ num }: { num: number }) {
+  return (
+    <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-brand text-[13px] font-bold text-[#0a0d18]">
+      {num}
+    </span>
+  )
+}
+
+export function BlockRenderer({ block, id, num }: { block: Block; id?: string; num?: number }) {
   if (block.type === "text") {
     return (
-      <div id={id} className="mb-5 scroll-mt-24">
-        {block.title && <h3 className="mb-2 text-lg font-semibold text-foreground">{block.title}</h3>}
+      <div id={id} className="mb-6 scroll-mt-24">
+        {block.title && (
+          <h3 className="mb-2.5 flex items-center gap-2.5 text-xl font-semibold text-foreground">
+            {num !== undefined && <NumBadge num={num} />}
+            {block.title}
+          </h3>
+        )}
         <p className="leading-relaxed text-muted-foreground">{block.body}</p>
       </div>
     )
@@ -25,12 +39,17 @@ export function BlockRenderer({ block, id }: { block: Block; id?: string }) {
 
   if (block.type === "list") {
     return (
-      <div id={id} className="mb-5 scroll-mt-24 rounded-lg border border-border bg-card p-5">
-        {block.title && <h4 className="mb-3 font-semibold text-foreground">{block.title}</h4>}
-        <ul className="flex flex-col gap-2">
+      <div id={id} className="mb-6 scroll-mt-24 rounded-xl border border-border bg-card p-5 shadow-sm">
+        {block.title && (
+          <h4 className="mb-3 flex items-center gap-2.5 font-semibold text-foreground">
+            {num !== undefined && <NumBadge num={num} />}
+            {block.title}
+          </h4>
+        )}
+        <ul className="flex flex-col gap-2.5">
           {block.items.map((item, i) => (
-            <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
-              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+            <li key={i} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
+              <Check className="mt-0.5 size-4 shrink-0 text-brand" />
               <span>{item}</span>
             </li>
           ))}
@@ -41,22 +60,24 @@ export function BlockRenderer({ block, id }: { block: Block; id?: string }) {
 
   if (block.type === "mistakes") {
     return (
-      <div id={id} className="mb-5 scroll-mt-24 rounded-lg border border-border bg-card p-5">
-        {block.title && (
-          <h4 className="mb-4 flex items-center gap-2 font-semibold text-foreground">
-            <AlertTriangle className="size-4 text-warn" />
-            {block.title}
-          </h4>
-        )}
+      <div id={id} className="mb-6 scroll-mt-24 rounded-xl border border-warn/40 bg-warn/[0.04] p-5 shadow-sm">
+        <h4 className="mb-4 flex items-center gap-2.5 font-semibold text-foreground">
+          {num !== undefined ? <NumBadge num={num} /> : <AlertTriangle className="size-4 text-warn" />}
+          {block.title ?? "Частые ошибки"}
+        </h4>
         <div className="flex flex-col gap-3">
           {block.items.map((m, i) => (
-            <div key={i} className="grid gap-2 rounded-lg border border-border bg-background-soft p-3 sm:grid-cols-2">
+            <div key={i} className="grid gap-2 rounded-lg border border-border bg-background-soft p-3.5 sm:grid-cols-2">
               <div className="flex gap-2">
-                <X className="mt-0.5 size-4 shrink-0 text-danger" />
+                <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-danger/15">
+                  <X className="size-3.5 text-danger" />
+                </span>
                 <span className="text-sm leading-relaxed text-muted-foreground">{m.bad}</span>
               </div>
               <div className="flex gap-2 sm:border-l sm:border-border sm:pl-3">
-                <Check className="mt-0.5 size-4 shrink-0 text-ok" />
+                <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-ok/15">
+                  <Check className="size-3.5 text-ok" />
+                </span>
                 <span className="text-sm leading-relaxed text-foreground/90">{m.good}</span>
               </div>
             </div>
@@ -68,12 +89,17 @@ export function BlockRenderer({ block, id }: { block: Block; id?: string }) {
 
   if (block.type === "flow") {
     return (
-      <div id={id} className="mb-5 scroll-mt-24">
-        {block.title && <h4 className="mb-4 font-semibold text-foreground">{block.title}</h4>}
+      <div id={id} className="mb-6 scroll-mt-24">
+        {block.title && (
+          <h4 className="mb-4 flex items-center gap-2.5 font-semibold text-foreground">
+            {num !== undefined && <NumBadge num={num} />}
+            {block.title}
+          </h4>
+        )}
         <ol className="flex flex-col gap-3">
           {block.steps.map((s, i) => (
             <li key={i} className="flex gap-3.5">
-              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand/15 text-sm font-semibold text-brand">
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1 rounded-lg border border-border bg-card p-3.5">
@@ -89,14 +115,19 @@ export function BlockRenderer({ block, id }: { block: Block; id?: string }) {
 
   if (block.type === "table") {
     return (
-      <div id={id} className="mb-5 scroll-mt-24">
-        {block.title && <h4 className="mb-3 font-semibold text-foreground">{block.title}</h4>}
-        <div className="overflow-x-auto rounded-lg border border-border">
+      <div id={id} className="mb-6 scroll-mt-24">
+        {block.title && (
+          <h4 className="mb-3 flex items-center gap-2.5 font-semibold text-foreground">
+            {num !== undefined && <NumBadge num={num} />}
+            {block.title}
+          </h4>
+        )}
+        <div className="overflow-x-auto rounded-xl border border-border shadow-sm">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
               <tr className="bg-card-2">
                 {block.headers.map((h, i) => (
-                  <th key={i} className="whitespace-nowrap px-4 py-2.5 font-semibold text-foreground">
+                  <th key={i} className="whitespace-nowrap px-4 py-2.5 font-semibold text-brand">
                     {h}
                   </th>
                 ))}
@@ -122,7 +153,7 @@ export function BlockRenderer({ block, id }: { block: Block; id?: string }) {
   // callout
   const { icon: Icon, cls, ic } = calloutStyles[block.variant]
   return (
-    <div className={`mb-5 flex gap-3 rounded-lg border-l-4 p-4 ${cls}`}>
+    <div className={`mb-6 flex gap-3 rounded-xl border-l-4 p-4 ${cls}`}>
       <Icon className={`mt-0.5 size-5 shrink-0 ${ic}`} />
       <p className="text-sm leading-relaxed text-foreground/90">{block.body}</p>
     </div>
