@@ -132,7 +132,7 @@ function Item({ title, id }) {
             "Стрелочные функции и лексический this",
             "Шаблонные строки `${...}` вместо конкатенации",
             "Деструктуризация объектов и массивов (основа разбора props)",
-            "Параметры по умолчанию: function f(x = 10) {}",
+            "Параметры по ум������лчанию: function f(x = 10) {}",
             "Тип-приведение и разница == vs === (всегда строгое ===)",
           ],
         },
@@ -278,11 +278,62 @@ const [users, posts] = await Promise.all([
 ])`,
         },
         {
+          type: "text",
+          title: "Иммутабельные обновления (основа state)",
+          body: "React и стейт-менеджеры определяют изменение по НОВОЙ ссылке, а не по со��ер��имому. Поэтому массивы и объекты нужно обновлять иммутабельно — создавать копию с изменением, а не мутировать оригинал. Мутирующие методы (push, splice, sort, reverse) меняют исходный массив; их немутирующие аналоги (map, filter, spread, toSorted) возвращают новый. Это одна из самых частых тем на собеседовании про React.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `const list = [{ id: 1, done: false }, { id: 2, done: false }]
+
+// добавить — новый массив
+const added = [...list, { id: 3, done: false }]
+
+// удалить по id
+const removed = list.filter((t) => t.id !== 2)
+
+// обновить один элемент (копируем и массив, и объект)
+const toggled = list.map((t) =>
+  t.id === 1 ? { ...t, done: true } : t
+)
+
+// сортировка без мутации: копия или toSorted (ES2023)
+const sorted = [...list].sort((a, b) => a.id - b.id)
+
+// ❌ мутация — React может не заметить изменение
+// list.push(x); list[0].done = true`,
+        },
+        {
+          type: "text",
+          title: "Работа с объектами",
+          body: "Полезные встроенные методы: Object.keys/values/entries для перебора, Object.assign и spread для слияния, Object.freeze для заморозки. Помни про поверхностность копирования: spread копирует только верхний уровень, вложенные объекты остаются общими по ссылке — их тоже нужно копировать при обновлении.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `const user = { name: "Аня", address: { city: "Москва" } }
+
+// перебор
+Object.keys(user)     // ["name", "address"]
+Object.entries(user)  // [["name","Аня"], ["address", {...}]]
+
+// поверхностная копия: address ОБЩИЙ по ссылке!
+const copy = { ...user }
+copy.address.city = "Питер"   // изменит и user.address.city ❌
+
+// правильно обновить вложенное — копируем каждый уровень
+const updated = {
+  ...user,
+  address: { ...user.address, city: "Питер" },
+}`,
+        },
+        {
           type: "list",
           title: "Уровень Middle",
           items: [
             "Spread/rest для иммутабельных обновлений (связка со state React)",
-            "map / filter / reduce / find / some / every вместо циклов for",
+            "map / filter / reduce / find / some / every вме��то циклов for",
             "ES-модули import/export и отличие от CommonJS require",
             "Промисы, async/await, Promise.all / allSettled / race",
             "Опциональная цепочка ?. и нулевое слияние ?? (ES2020)",
@@ -406,7 +457,7 @@ console.log("4")
           "Разницы нет, это синонимы",
         ],
         answer: 1,
-        explain: "var видна во всей функции и всплывает наверх, из-за чего легко получить неожиданное значение. let/const живут только внутри своего блока {}.",
+        explain: "var видна во всей функции и всплывает наверх, из-за чего легко получить неожиданное значение. let/const живут только внут��и своего блока {}.",
       },
       {
         q: "Почему стрелочные функции удобны для колбэков в React?",
@@ -443,7 +494,7 @@ console.log("4")
         {
           type: "text",
           title: "Зачем TypeScript",
-          body: "TypeScript — это надстройка над JavaScript, которая добавляет статические типы. Главная ценность: ошибки ловятся на этапе компиляции в редакторе, а не в проде у пользователя. TS не выполняется в браузере или Node напрямую — компилятор (tsc или сборщик вроде esbuild/swc) стирает типы и выдаёт обычный JavaScript. Типы — это чисто «инструмент разработчика»: в рантайме их не существует.",
+          body: "TypeScript — это надстройка над JavaScript, которая добавляет статические типы. Главная ценность: ошибки ловятся на этапе компил��ции в редакторе, а не в проде у пользователя. TS не выполняется в браузере или Node напрямую — компилятор (tsc или сборщик вроде esbuild/swc) стирает типы и выдаёт обычный JavaScript. Типы — это чисто «инструмент разработчика»: в рантайме их не существует.",
         },
         {
           type: "text",
@@ -492,7 +543,7 @@ type Handler = (event: string) => void`,
         },
         {
           type: "list",
-          title: "Что точно нужно знать на входе",
+          title: "Что точно нужно знать н�� входе",
           items: [
             "Примитивы: string, number, boolean, null, undefined, symbol, bigint",
             "union-типы (string | number) и литеральные типы ('sm' | 'md' | 'lg')",
@@ -530,7 +581,7 @@ type Handler = (event: string) => void`,
         {
           type: "text",
           title: "Дженерики (generics)",
-          body: "Дженерики — это «типы-параметры». Они позволяют писать переиспользуемый код, который сохраняет типы вместо того, чтобы сваливаться в any. Дженерик как бы говорит: «я не знаю конкретный тип сейчас, но запомню его и верну обратно». Их можно ограничивать через extends.",
+          body: "Дженерики — это «типы-параметры». Они позволяют писать переиспользуемый код, который сохраняет типы вместо того, чтобы сваливаться в any. Дж��нерик как бы говорит: «я не знаю конкретный тип сейчас, но запомню его и верну обратно». Их можно ограничивать через extends.",
         },
         {
           type: "code",
@@ -764,6 +815,59 @@ config.port  // остаётся number, а не unknown`,
       junior: [
         {
           type: "text",
+          title: "Установка и запуск проекта",
+          body: "Быстрее всего поднять React через Vite. Команда ниже создаёт готовый проект с React и TypeScript, ставит зависимости и запускает дев-сервер с горячей перезагрузкой (обычно на http://localhost:5173). Нужен установленный Node.js (LTS-версия). Для полноценного сайта с роутингом и SSR берут фреймворк — Next.js (npx create-next-app@latest).",
+        },
+        {
+          type: "code",
+          lang: "bash",
+          code: `# 1. создать проект (React + TypeScript) через Vite
+npm create vite@latest my-app -- --template react-ts
+
+# 2. зайти в папку и поставить зависимости
+cd my-app
+npm install
+
+# 3. основные команды
+npm run dev       # дев-сервер с HMR -> http://localhost:5173
+npm run build     # прод-сборка в папку dist/
+npm run preview   # локальный просмотр собранного бандла`,
+        },
+        {
+          type: "code",
+          lang: "bash",
+          code: `# Минимальная структура проекта на Vite
+my-app/
+  index.html         # точка входа, подключает /src/main.tsx
+  package.json       # зависимости и скрипты
+  vite.config.ts     # конфиг сборщика
+  src/
+    main.tsx         # монтирует приложение в DOM
+    App.tsx          # корневой компонент
+    index.css`,
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// src/main.tsx — точка входа: монтируем React в <div id="root">
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import App from "./App"
+import "./index.css"
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+)`,
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          body: "Create React App (CRA) устарел — новые проекты на чистом React стартуют через Vite. Если нужны роутинг, серверный рендер и API из коробки, сразу бери Next.js вместо голого React + Vite.",
+        },
+        {
+          type: "text",
           title: "Суть React",
           body: "React — библиотека для построения UI из компонентов. Главная ментальная модель: UI = f(state). Ты описываешь, как выглядит интерфейс при данном состоянии, а не дёргаешь DOM руками. Когда состояние меняется, React перерисовывает компонент, сравнивает результат (reconciliation через Virtual DOM) и обновляет в реальном DOM только то, что действительно изменилось.",
         },
@@ -809,7 +913,7 @@ function Item({ label, onDelete, id }: Props) {
         {
           type: "text",
           title: "Как передаются данные между компонентами",
-          body: "Базовый способ связи — props. Родитель передаёт данные вниз как атрибуты, а чтобы сообщить наверх о событии, передаёт вниз функцию-колбэк, которую ребёнок вызывает. Так рождается схема «данные вниз, события вверх». Ещё один приём — children: передать вложенную разметку как содержимое компонента (композиция).",
+          body: "Базовый способ связи — props. Родитель передаёт данные вниз как атрибуты, а чтобы сообщить наверх о событии, передаёт вниз функцию-колбэк, которую ребёнок вызывает. Так рождается схема «данные вниз, события вверх». Ещё один приём — children: передать вложенную разметк�� как содержимое компонента (композиция).",
         },
         {
           type: "code",
@@ -922,14 +1026,14 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
           items: [
             {
               bad: "key={index} в списке, который сортируется, фильтруется или в который вставляют элементы.",
-              good: "Используй стабильный уникальный id как key. Индекс путает React при перестановке и ломает состояние/анимации.",
+              good: "Испо��ьзуй стабильный уникальный id как key. Индекс путает React при перестановке и ломает состояние/анимации.",
             },
             {
               bad: "Вызвать setState прямо в теле компонента → бесконечный ререндер.",
               good: "Обновляй state в обработчиках событий или в useEffect, а не при каждом рендере компонента.",
             },
             {
-              bad: "Читать state сразу после setState и ждать нового значения.",
+              bad: "Читать state сразу после setState и ждать нового значе��ия.",
               good: "setState асинхронный. Новое значение появится на следующем рендере; если нужно опереться на предыдущее — setCount(c => c + 1).",
             },
           ],
@@ -967,7 +1071,7 @@ const handleClick = useCallback(() => save(id), [id])`,
         {
           type: "text",
           title: "Кастомные хуки",
-          body: "Переиспользуемую логику со state/эффектами выносят в кастомный хук (useDebounce, useAuth, useLocalStorage). Это не про переиспользование состояния между компонентами, а про переиспользование логики — состояние у каждого вызова своё.",
+          body: "Переиспользуемую логику со state/эффектами выносят в кастомный хук (useDebounce, useAuth, useLocalStorage). Это не про переиспользование состояния между компонентами, а про переиспользо��ание логики — состояние у каждого вызова своё.",
         },
         {
           type: "code",
@@ -1042,7 +1146,7 @@ function useUser(id: number) {
         {
           type: "text",
           title: "Структура проекта",
-          body: "Для маленького приложения хватает группировки по типу файлов (components/, hooks/, utils/). Но с ростом кода это неудобно — код одной фичи разбросан по папкам. Более масштабируемый подход — feature-based (или feature-sliced): код группируется вокруг фич, а общее переиспользуемое лежит в shared. Главное правило любой структуры — предсказуемость: по имени фичи легко найти всё, что к ней относится.",
+          body: "Для маленького приложения хватает группировки по типу файлов (components/, hooks/, utils/). Но с ростом кода это неудобно — код одной фичи разбросан по папкам. Более масштабируемый подход — feature-based (или feature-sliced): код группируется вокруг фич, а об��ее переиспользуемое лежит в shared. Главное правило любой структуры — предсказуемость: по имени фичи легко найти всё, что к ней ��тносится.",
         },
         {
           type: "code",
@@ -1086,14 +1190,14 @@ src/
         {
           type: "callout",
           variant: "tip",
-          body: "Правило вакансии: серверные данные — это НЕ useState. Кэш, повторные запросы, статусы loading/error и инвалидация — задача TanStack Query. useState/Zustand оставь для локального UI-состояния (модалка открыта, вкладка активна).",
+          body: "Правило вакансии: серверные данные — это НЕ useState. Кэш, повторные запросы, статусы loading/error и инвалидация — зада��а TanStack Query. useState/Zustand оставь для локального UI-состояния (модалка открыта, вкладка активна).",
         },
       ],
       advanced: [
         {
           type: "text",
           title: "Ререндеры и производительность",
-          body: "Компонент перерисовывается, когда меняется его state, меняются props или перерисовался родитель. Лишние ререндеры сами по себе не всегда проблема (React быстрый), но становятся ею на больших списках и тяжёлых деревьях. Инструменты борьбы: React.memo, useMemo, useCallback, разбиение компонентов и стабильные ссылки.",
+          body: "Компонент перерисовывается, когда меняется его state, меняются props или перерисовался родитель. Лишние ререндеры сами по себе не всегда проблема (React быстрый), но становятся ею на больших сп��сках и тяжёлых деревьях. Инструменты борьбы: React.memo, useMemo, useCallback, разбиение компонентов и стабильные ссылки.",
         },
         {
           type: "code",
@@ -1108,8 +1212,74 @@ const onSelect = useCallback((id: number) => setSelected(id), [])`,
         },
         {
           type: "text",
+          title: "Правила хуков",
+          body: "Хуки работают за счёт порядка вызова: React сопоставляет их по позиции между рендерами. Отсюда два жёстких правила. Первое: вызывать хуки только на верхнем уровне компонента — нельзя внутри условий, циклов или вложенных функций (иначе порядок «поедет»). Второе: вызывать хуки только из React-компонентов или других хуков. Кастомный хук — это просто функция с префиксом use, которая внутри вызывает другие хуки.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// НЕЛЬЗЯ: хук внутри условия — порядок вызовов сломается
+function Bad({ enabled }: { enabled: boolean }) {
+  if (enabled) {
+    const [x, setX] = useState(0) // ❌ условный вызов хука
+  }
+}
+
+// МОЖНО: хук на верхнем уровне, условие внутри
+function Good({ enabled }: { enabled: boolean }) {
+  const [x, setX] = useState(0)   // ✅ всегда вызывается
+  if (!enabled) return null
+  return <span>{x}</span>
+}
+
+// кастомный хук — функция с префиксом use, инкапсулирует логику
+function useToggle(initial = false) {
+  const [on, setOn] = useState(initial)
+  const toggle = useCallback(() => setOn((v) => !v), [])
+  return [on, toggle] as const
+}`,
+        },
+        {
+          type: "text",
+          title: "useEffect: cleanup и гонки запросов",
+          body: "useEffect синхронизирует компонент с внешним миром (подписки, таймеры, запросы). Возвращаемая функция — cleanup: она снимает подписки и отменяет устаревшее. При загрузке данных важно защититься от гонки (race condition): пока летит первый запрос, параметры могут смениться, и старый ответ перезапишет новый. Решение — флаг отмены или AbortController.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `useEffect(() => {
+  const controller = new AbortController()
+
+  fetch(\`/api/users/\${id}\`, { signal: controller.signal })
+    .then((r) => r.json())
+    .then(setUser)
+    .catch((e) => {
+      if (e.name !== "AbortError") console.error(e)
+    })
+
+  // cleanup: отменяем устаревший запрос при смене id / размонтировании
+  return () => controller.abort()
+}, [id])`,
+        },
+        {
+          type: "table",
+          title: "Шпаргалка по основным хукам",
+          headers: ["Хук", "Когда использовать"],
+          rows: [
+            ["useState", "Локальное состояние компонента (число, строка, объект)"],
+            ["useEffect", "Побочные эффекты: подписки, таймеры, синхронизация с внешним миром"],
+            ["useRef", "Ссылка на DOM-узел или мутируемое значение без ререндера"],
+            ["useMemo", "Кэшировать результат дорогого вычисления между рендерами"],
+            ["useCallback", "Стабильная ссылка на функцию (для memo и deps)"],
+            ["useContext", "Читать значение из Context без передачи через props"],
+            ["useReducer", "Сложное состояние с несколькими действиями (dispatch)"],
+            ["useOptimistic", "Оптимистичный UI до ответа сервера (React 19)"],
+          ],
+        },
+        {
+          type: "text",
           title: "React 19: новое",
-          body: "Server Components рендерятся на сервере и не отправляют свой JS в браузер (меньше бандл). Actions упрощают мутации форм. Новые хуки: useActionState (состояние экшена/формы), useOptimistic (оптимистичный UI), use() (читать промис/контекст в рендере). React Compiler умеет авто-мемоизировать, снижая нужду в ручных useMemo/useCallback.",
+          body: "Server Components рендерятся на сервере и не отправляют свой JS в браузер (меньше бандл). Actions упрощают мутации форм. Новые хуки: useActionState (состояние экше��а/формы), useOptimistic (оптимистичный UI), use() (читать промис/контекст в рендере). React Compiler умеет авто-мемоизировать, снижая нужду в ручных useMemo/useCallback.",
         },
         {
           type: "code",
@@ -1353,7 +1523,7 @@ export async function GET(req: Request) {
         {
           type: "text",
           title: "Server Actions",
-          body: 'Server Actions — функции с директивой "use server", которые вызываются с клиента, но выполняются на сервере. Позволяют делать мутации (создать/обновить/удалить) прямо из формы без ручного написания API-роута, с прогрессивным улучшением и типобезоваснвстью.',
+          body: 'Server Actions — функции с директивой "use server", которые вызываются с клиента, но выполняются на сервере. Позволяют делать мутации (создать/обновить/удалить) прямо из формы без ручного написания API-роута, с прог��ессивным улучшением и типобезоваснвстью.',
         },
         {
           type: "code",
@@ -1447,7 +1617,7 @@ fetch(url, { cache: "no-store" })`,
         {
           type: "text",
           title: "Streaming и Suspense",
-          body: "Next умеет стримить HTML по частям: быстрый каркас отдаётся сразу, а медленные секции подгружаются потоково внутри <Suspense fallback={...}>. Это улучшает TTFB и воспринимаемую скорость — пользователь видит контент, пока тяжёлый запрос ещё идёт.",
+          body: "Next умеет стримить HTML по частям: быстрый каркас отдаётся сразу, а медленные секции подгружаются потоково внутри <Suspense fallback={...}>. Это улучшает TTFB и воспринимаемую скорость — пользователь ви��ит контент, пока тяжёлый запрос ещё идёт.",
         },
         {
           type: "list",
@@ -1502,7 +1672,7 @@ fetch(url, { cache: "no-store" })`,
         options: [
           "Их удалили",
           "Они стали синхронными",
-          "Они стали асинхронными — их нужно await",
+          "Они стали а��инхронными — их нужно await",
           "Их вынесли в отдельный пакет",
         ],
         answer: 2,
@@ -1524,7 +1694,7 @@ fetch(url, { cache: "no-store" })`,
         options: [
           "Для стилизации компонентов",
           "Чтобы делать мутации на сервере прямо из формы без ручного API-роута",
-          "Для клиентского роутинга",
+          "Для клиентского ��оутинга",
           "Для оптимизации изображений",
         ],
         answer: 1,
@@ -1599,7 +1769,7 @@ npm run preview   # локально посмотреть собранный п�
             },
             {
               bad: "Класть секреты (ключи API) в переменные с префиксом VITE_.",
-              good: "Всё с префиксом VITE_ попадает в бандл и видно в браузере. Секреты держи только на бэкенде.",
+              good: "Всё с префи��сом VITE_ попадает в бандл и видно в браузере. Секреты держи только на бэкенде.",
             },
           ],
         },
@@ -1644,7 +1814,7 @@ export default defineConfig({
 // SECRET_KEY=xxx   <- без VITE_, в браузер НЕ попадёт
 
 const apiUrl = import.meta.env.VITE_API_URL   // доступно в коде
-const isDev = import.meta.env.DEV             // true в режиме разработки
+const isDev = import.meta.env.DEV             // true в режиме ��азработки
 
 // типизация переменных (src/vite-env.d.ts)
 interface ImportMetaEnv {
@@ -1755,10 +1925,10 @@ function App() {
         explain: "Vite подставляет переменные через import.meta.env, и только те, что начинаются с VITE_, попадают в клиентский бандл.",
       },
       {
-        q: "Что Vite использует для прод-сборки?",
+        q: "Что Vite использует для про��-сборки?",
         options: ["esbuild", "webpack", "Rollup", "Parcel"],
         answer: 2,
-        explain: "В деве — esbuild + нативные ESM, а для продакшена Vite собирает бандл через Rollup с tree-shaking, минификацией и code splitting.",
+        explain: "В деве — esbuild + нативные ESM, а для прод��кшена Vite соби��ает бандл через Rollup с tree-shaking, минификацией и code splitting.",
       },
       {
         q: "Что из этого Vite НЕ делает сам по себе?",
@@ -1770,6 +1940,357 @@ function App() {
         ],
         answer: 2,
         explain: "Vite — сборщик для SPA. SSR, файловый роутинг и API дают фреймворки (Next.js, Remix), построенные поверх подобных инструментов.",
+      },
+    ],
+  },
+  {
+    id: "nodejs",
+    title: "Node.js",
+    icon: "Hexagon",
+    tagline: "Серверный JavaScript: событийный цикл, модули, API и структура бэкенда",
+    levels: {
+      junior: [
+        {
+          type: "text",
+          title: "Что такое Node.js и зачем он нужен",
+          body: "Node.js — это среда выполнения JavaScript вне браузера, построенная на движке V8 (том же, что в Chrome). До Node.js JavaScript жил только в браузере; Node вынес его на сервер и позволил писать бэкенд, CLI-утилиты, скрипты и инструменты сборки (Vite, Webpack тоже работают на Node). Главная идея — один язык на фронте и на бэке. Node не многопоточный по умолчанию: он однопоточный, но неблокирующий, и это его ключевая особенность.",
+        },
+        {
+          type: "text",
+          title: "Событийный цикл и неблокирующий I/O",
+          body: "Node обрабатывает тысячи одновременных соединений одним потоком за счёт асинхронного, неблокирующего ввода-вывода. Когда код делает запрос к БД или читает файл, Node не «замирает» в ожидании — он отдаёт операцию системе (libuv) и продолжает работу, а результат обрабатывает позже через event loop. Поэтому Node отлично подходит для I/O-нагруженных задач (API, чаты, стриминг) и хуже — для тяжёлых CPU-вычислений, которые блокируют единственный поток.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// Неблокирующее чтение файла: код не «замирает»
+import { readFile } from "node:fs/promises"
+
+console.log("1: старт")
+
+readFile("./data.txt", "utf-8")
+  .then((text) => console.log("3: файл прочитан", text.length))
+  .catch((err) => console.error("Ошибка:", err.message))
+
+console.log("2: этот лог выполнится РАНЬШЕ чтения файла")
+
+// Порядок вывода: 1: старт -> 2: ... -> 3: файл прочитан
+// Node не ждёт диск, а продолжает выполнять код`,
+        },
+        {
+          type: "text",
+          title: "Модули: ESM и CommonJS",
+          body: "В Node живут две модульные системы. CommonJS — исторический стандарт Node: require() и module.exports. ES-модули (ESM) — современный стандарт из браузера: import/export. Тип модулей задаётся полем \"type\" в package.json (\"module\" — ESM, \"commonjs\" или отсутствие — CJS). Новые проекты стартуют на ESM. Встроенные модули Node лучше импортировать с префиксом node: (например node:fs).",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// CommonJS (старый стиль)
+const fs = require("fs")
+module.exports = { sum }
+
+// ESM (современный стиль, "type": "module" в package.json)
+import fs from "node:fs"
+export function sum(a, b) { return a + b }
+export default sum
+
+// встроенные модули Node — с префиксом node:
+import path from "node:path"
+import { createServer } from "node:http"`,
+        },
+        {
+          type: "text",
+          title: "package.json, npm и зависимости",
+          body: "package.json — паспорт проекта: имя, версия, скрипты и зависимости. npm (или pnpm/yarn) ставит пакеты в node_modules и фиксирует точные версии в lock-файле. dependencies нужны в рантайме, devDependencies — только для разработки (сборка, тесты, линтеры). Скрипты в \"scripts\" запускаются через npm run <имя>.",
+        },
+        {
+          type: "code",
+          lang: "bash",
+          code: `npm init -y                 # создать package.json
+npm install express         # добавить в dependencies
+npm install -D typescript   # добавить в devDependencies
+npm run dev                 # запустить скрипт "dev"
+
+# package.json (фрагмент)
+# {
+#   "type": "module",
+#   "scripts": { "dev": "node --watch server.js" },
+#   "dependencies": { "express": "^4.19.0" }
+# }`,
+        },
+        {
+          type: "list",
+          title: "База Junior",
+          items: [
+            "Node.js = JavaScript вне браузера на движке V8",
+            "Однопоточный, но неблокирующий: силён в I/O, слаб в тяжёлом CPU",
+            "Event loop обрабатывает асинхронные операции через колбэки/промисы",
+            "Модули: CommonJS (require) vs ESM (import), тип задаёт package.json",
+            "package.json, npm, node_modules, lock-файл, dependencies vs devDependencies",
+            "Встроенные модул��: fs, path, http, os, crypto, events (импорт с node:)",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          body: "process.env хранит переменные окружения. Секреты (пароли БД, ключи API) держат в .env и НЕ коммитят в git (добавь .env в .gitignore). Начиная с Node 20+ можно грузить их встроенно: node --env-file=.env server.js — без пакета dotenv.",
+        },
+        {
+          type: "mistakes",
+          title: "Ошибки новичка в Node.js",
+          items: [
+            {
+              bad: "Использовать синхронные операции (fs.readFileSync, тяжёлые циклы) в обработчике запроса.",
+              good: "Блокирующий код тормозит ВЕСЬ сервер, т.к. поток один. Используй асинхронные версии (fs/promises) и выноси тяжёлые вычисления.",
+            },
+            {
+              bad: "Коммитить node_modules и .env в репозиторий.",
+              good: "node_modules восстанавливается по lock-файлу через npm install, а .env содержит секреты. Оба — в .gitignore.",
+            },
+            {
+              bad: "Смешивать require и import в одном ESM-пр��екте и удивлять��я ошибкам.",
+              good: "Определись с системой модулей через \"type\" в package.json и придерживайся её; для встроенных модулей используй префикс node:.",
+            },
+          ],
+        },
+      ],
+      middle: [
+        {
+          type: "text",
+          title: "HTTP-сервер: от голого http до Express",
+          body: "Node умеет поднять сервер встроенным модулем http, но вручную разбирать маршруты и тело запроса неудобно. Поэтому используют фреймворки — чаще всего Express: он даёт роутинг, middleware и удобную работу с req/res. Middleware — это функции, которые выполняются по цепочке для каждого запроса (логирование, парсинг JSON, аутентификация) и передают управление дальше через next().",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `import express from "express"
+
+const app = express()
+app.use(express.json())          // middleware: парсит JSON-тело
+
+// middleware-логгер (выполняется для каждого запроса)
+app.use((req, _res, next) => {
+  console.log(req.method, req.url)
+  next()                         // передаём управление дальше
+})
+
+app.get("/users/:id", (req, res) => {
+  res.json({ id: req.params.id })
+})
+
+app.post("/users", (req, res) => {
+  const user = req.body          // доступно благодаря express.json()
+  res.status(201).json(user)
+})
+
+// централизованный обработчик ошибок (4 аргумента!)
+app.use((err, _req, res, _next) => {
+  res.status(500).json({ error: err.message })
+})
+
+app.listen(3000, () => console.log("http://localhost:3000"))`,
+        },
+        {
+          type: "text",
+          title: "Структура проекта на Node.js",
+          body: "Плоский server.js хорош только для примера. Реальный бэкенд разбивают по слоям ответственности. Классический подход — layered (routes → controllers → services → repositories): маршруты принимают запрос, контроллеры разбирают вход/выход, сервисы держат бизнес-логику, репозитории общаются с БД. Для крупных проектов используют группировку по фичам (modules/). Главное — тонкие контроллеры и вся логика в сервисах.",
+        },
+        {
+          type: "code",
+          lang: "bash",
+          code: `# Layered — понятно и распространено
+src/
+  config/          # env, подключение к БД
+  routes/          # описание маршрутов, роутинг
+  controllers/     # разбор req/res, валидация входа
+  services/        # бизнес-логика (ядро приложения)
+  repositories/    # доступ к БД (запросы)
+  middlewares/     # auth, логирование, обработка ошибок
+  utils/           # хелперы
+  app.js           # сборка express-приложения
+  server.js        # точка входа: app.listen(...)
+
+# Feature-based — лучше масштабируется
+src/
+  modules/
+    users/
+      users.routes.js
+      users.controller.js
+      users.service.js
+      users.repository.js
+    orders/
+      ...
+  shared/          # общие middleware, утилиты, конфиг
+  app.js`,
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// Тонкий контроллер: только вход/выход
+export async function getUser(req, res, next) {
+  try {
+    const user = await userService.findById(req.params.id) // логика в сервисе
+    if (!user) return res.status(404).json({ error: "Не найден" })
+    res.json(user)
+  } catch (err) {
+    next(err)                    // ошибку — в централизованный обработчик
+  }
+}
+
+// Сервис: бизнес-логика, не знает про req/res
+export const userService = {
+  async findById(id) {
+    return userRepository.findById(id)   // доступ к данным — в репозитории
+  },
+}`,
+        },
+        {
+          type: "list",
+          title: "Уровень Middle",
+          items: [
+            "Express: роутинг, middleware, req/res, обработка ошибок через next(err)",
+            "Слои: routes → controllers → services → repositories (тонкие контроллеры)",
+            "REST: методы GET/POST/PUT/PATCH/DELETE и корректные статус-коды",
+            "Валидация входных данных (zod / joi) на границе приложения",
+            "Переменные окружения, конфиг, разделение dev/prod",
+            "Стримы (Stream) и Buffer для больших данных и файлов",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "warn",
+          body: "Ошибки в async-функциях НЕ ловятся автоматически Express 4. Оборачивай await в try/catch и пробрасывай в next(err), либо используй обёртку asyncHandler / Express 5, где промисы обрабатываются из коробки. Незаловленный промис уронит процесс (unhandledRejection).",
+        },
+      ],
+      advanced: [
+        {
+          type: "text",
+          title: "Event loop в деталях: фазы и очереди",
+          body: "Event loop проходит по фазам: timers (setTimeout/setInterval) → pending → poll (I/O) → check (setImmediate) → close. Между фазами Node опустошает очереди микрозадач: сначала process.nextTick (высший приоритет), затем промисы. Поэтому nextTick и .then выполняются раньше, чем setTimeout и setImmediate. Понимание порядка — классический продвинутый вопрос.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `console.log("1: sync")
+
+setTimeout(() => console.log("5: setTimeout"), 0)
+setImmediate(() => console.log("6: setImmediate"))
+Promise.resolve().then(() => console.log("4: promise"))
+process.nextTick(() => console.log("3: nextTick"))
+
+console.log("2: sync")
+
+// Порядок: 1, 2 (синхронный код)
+// -> 3 nextTick -> 4 promise (микрозадачи)
+// -> 5 setTimeout / 6 setImmediate (следующие фазы)`,
+        },
+        {
+          type: "text",
+          title: "Масштабирование: cluster, worker_threads, child_process",
+          body: "Один процесс Node использует одно ядро. Чтобы задействовать все ядра, поднимают несколько процессов через модуль cluster или запускают приложение под менеджером (PM2) / за балансировщиком. Для тяжёлых CPU-задач (шифрование, обработка изображений), котор��е блокируют event loop, выносят вычисления в worker_threads (общая память) или child_process (отдельные процессы).",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `import cluster from "node:cluster"
+import { availableParallelism } from "node:os"
+
+if (cluster.isPrimary) {
+  // мастер порождает воркер на каждое ядро
+  for (let i = 0; i < availableParallelism(); i++) cluster.fork()
+  cluster.on("exit", () => cluster.fork())  // перезапуск упавшего
+} else {
+  // каждый воркер — полноценный сервер на том же порту
+  startServer()
+}`,
+        },
+        {
+          type: "list",
+          title: "Что показать как сильный кандидат",
+          items: [
+            "Фазы event loop, микрозадачи, nextTick vs Promise vs setTimeout/setImmediate",
+            "Почему CPU-bound задачи блокируют Node и как выносить их в worker_threads",
+            "Масштабирование: cluster / PM2 / несколько инстансов за балансировщиком",
+            "Стримы и backpressure для потоковой обработки больших данных",
+            "Graceful shutdown: обработка SIGTERM, закрытие соединений с БД",
+            "Безопасность: helmet, rate limiting, валидация, защита от инъекций",
+          ],
+        },
+        {
+          type: "flow",
+          title: "Жизненный цикл запроса в Express",
+          steps: [
+            { title: "Входящий запрос", body: "Node принимает HTTP-соединение и создаёт объекты req/res." },
+            { title: "Цепочка middleware", body: "Логирование, CORS, парсинг тела, аутентификация — каждый вызывает next()." },
+            { title: "Роут и контроллер", body: "Совпавший маршрут вызывает контроллер, который разбирает вход." },
+            { title: "Сервис и БД", body: "Контроллер зовёт сервис с бизнес-логикой, тот обращается к репозиторию/БД." },
+            { title: "Ответ или ошибка", body: "Формируется ответ res.json(); ошибка пробрасывается в next(err) и в общий обработчик." },
+          ],
+        },
+        {
+          type: "mistakes",
+          title: "Частые ошибки",
+          items: [
+            {
+              bad: "Выполнять тяжёлые синхронные вычисления прямо в обработчике запроса.",
+              good: "Это блокирует event loop и весь сервер. Выноси в worker_threads/child_process или отдельный сервис.",
+            },
+            {
+              bad: "Игнорировать graceful shutdown — процесс убивают, а соединения и запросы обрываются.",
+              good: "Слушай SIGTERM/SIGINT, прекращай приём новых запросов, дожидайся текущих и закрывай пул БД.",
+            },
+            {
+              bad: "Не ограничивать частоту запросов и не валидировать вход.",
+              good: "Добавь rate limiting, helmet и валидацию (zod/joi) — базовая защита от DoS и инъекций.",
+            },
+          ],
+        },
+      ],
+    },
+    quiz: [
+      {
+        q: "Какая модель выполнения у Node.js?",
+        options: [
+          "Многопоточная, по потоку на каждый запрос",
+          "Однопоточная с неблокирующим асинхронным I/O через event loop",
+          "Полностью синхронная",
+          "Многопроцес��ная по умолчанию",
+        ],
+        answer: 1,
+        explain: "Node однопоточный, но неблокирующий: I/O-операции отдаются системе, а результат обрабатывается через event loop. Поэтому он силён в I/O и слаб в тяжёлом CPU.",
+      },
+      {
+        q: "Чем dependencies отличаются от devDependencies?",
+        options: [
+          "Ничем, это синонимы",
+          "dependencies нужны в рантайме, devDependencies — только при разработке (сборка, тесты, линтеры)",
+          "devDependencies ставятся на проде, dependencies — нет",
+          "dependencies нельзя обновлять",
+        ],
+        answer: 1,
+        explain: "dependencies требуются работающему приложению, а devDependencies (TypeScript, тест-раннеры, линтеры) нужны только во время разработки и в прод-сборку не тянутся.",
+      },
+      {
+        q: "Почему тяжёлый синхронный цикл опасен в обработчике Express?",
+        options: [
+          "Он расходует слишком много памяти",
+          "Он блокирует единственный поток и весь сервер перестаёт отвечать",
+          "Express не поддерживает циклы",
+          "Он ломает роутинг",
+        ],
+        answer: 1,
+        explain: "Node выполняет JS в одном потоке. Долгая синхронная работа не даёт event loop обрабатывать другие запросы — сервер «зависает» для всех клиентов.",
+      },
+      {
+        q: "Что выполнится раньше: process.nextTick или setTimeout(fn, 0)?",
+        options: [
+          "setTimeout, он с нулевой задержкой",
+          "process.nextTick — микрозадачи опустошаются до перехода к фазе таймеров",
+          "Они всегда одновременно",
+          "Зависит от версии npm",
+        ],
+        answer: 1,
+        explain: "Очередь микрозадач (process.nextTick, затем промисы) опустошается между фазами event loop, до того как Node дойдёт до фазы timers с setTimeout.",
       },
     ],
   },
@@ -1938,11 +2459,11 @@ create(@Req() req, @Body() dto: CreatePostDto) {
               good: "Контроллер только принимает запрос и вызывает сервис; вся логика — в сервисах (провайдерах).",
             },
             {
-              bad: "Принимать req.body как есть, без валидации.",
-              good: "Описывать DTO с class-validator и включать глобальный ValidationPipe с whitelist: true.",
+              bad: "Принимать req.body как есть, без валида��ии.",
+              good: "��писывать DTO с class-validator и включать глобальный ValidationPipe с whitelist: true.",
             },
             {
-              bad: "Создавать экземпляры сервисов вручную через new вместо DI.",
+              bad: "Соз��авать экземпляры сервисов вручную через new вместо DI.",
               good: "Регистрировать в providers и получать через конструктор — так работают тесты, скоупы и подмена зависимостей.",
             },
             {
@@ -1997,6 +2518,373 @@ create(@Req() req, @Body() dto: CreatePostDto) {
         ],
         answer: 1,
         explain: "DTO описывает форму входа, а ValidationPipe + class-validator автоматически отклоняют невалидные данные (400) и могут отсекать лишние поля.",
+      },
+    ],
+  },
+  {
+    id: "auth",
+    title: "Авторизация (JWT)",
+    icon: "KeyRound",
+    tagline: "Аутентификация через JWT в связке Node.js + Postgres + React",
+    levels: {
+      junior: [
+        {
+          type: "text",
+          title: "Аутентификация vs авторизация",
+          body: "Два разных понятия, которые часто путают. Аутентификация (authentication) — «кто ты?»: проверка личности по логину и паролю. Авторизация (authorization) — «что тебе можно?»: проверка прав доступа к ресурсу (например, только админ может удалять пользователей). Сначала система аутентифицирует пользователя, а затем на каждом защищённом действии авторизует его.",
+        },
+        {
+          type: "text",
+          title: "Что такое JWT",
+          body: "JWT (JSON Web Token) — это компактный самодостаточный токен, который сервер выдаёт после успешного входа. Он состоит из трёх частей через точку: header.payload.signature. Header описывает алгоритм, payload содержит данные (id пользователя, роль, срок жизни), а signature — подпись секретным ключом сервера. Главная идея: сервер не хранит сессию, а доверяет токену, потому что подпись невозможно подделать без секрета. Payload закодирован в Base64URL, а НЕ зашифрован — читать его может любой.",
+        },
+        {
+          type: "code",
+          lang: "txt",
+          code: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9   <- header (алгоритм)
+.
+eyJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzIwMH0  <- payload (данные)
+.
+SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c   <- signature (подпись)
+
+# header:    { "alg": "HS256", "typ": "JWT" }
+# payload:   { "userId": 1, "role": "user", "exp": 1720000000 }
+# signature: HMACSHA256(base64(header) + "." + base64(payload), SECRET)`,
+        },
+        {
+          type: "text",
+          title: "Как проходит вход по JWT",
+          body: "Поток простой: пользователь шлёт email и пароль → сервер проверяет их в базе → если верно, генерирует JWT и возвращает клиенту → клиент прикладывает токен к каждому следующему запросу в заголовке Authorization: Bearer <token> → сервер проверяет подпись и срок, достаёт userId и понимает, кто перед ним. База (Postgres) хранит пользователей и хэши паролей, Node генерирует и проверяет токены, React хранит токен и шлёт его с запросами.",
+        },
+        {
+          type: "flow",
+          title: "Поток аутентификации",
+          steps: [
+            { title: "Регистрация", body: "React шлёт email+пароль. Node хэширует пароль (bcrypt) и сохраняет пользователя в Postgres." },
+            { title: "Логин", body: "Node находит пользователя по email и сравнивает пароль с хэшем через bcrypt.compare." },
+            { title: "Выдача токена", body: "При успехе Node подписывает JWT с userId и сроком жизни и возвращает его клиенту." },
+            { title: "Запросы", body: "React прикладывает токен в заголовке Authorization: Bearer <token> к защищённым запросам." },
+            { title: "Проверка", body: "Middleware на Node проверяет подпись и срок, достаёт userId и пропускает запрос дальше." },
+          ],
+        },
+        {
+          type: "list",
+          title: "База Junior",
+          items: [
+            "Аутентификация (кто ты) vs авторизация (что можно)",
+            "JWT = header.payload.signature, подписан секретом сервера",
+            "Payload закодирован, а НЕ зашифрован — секреты туда не кладут",
+            "Пароли хранят только как хэш (bcrypt), никогда в открытом виде",
+            "Токен передаётся в заголовке Authorization: Bearer <token>",
+            "Stateless: сервер не хранит сессию, доверяет подписи токена",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "warn",
+          body: "Payload JWT легко декодируется любым (это просто Base64) — НИКОГДА не клади туда пароли, номера карт и прочие секреты. Токен защищён от подделки подписью, но не от чтения. В payload — только неконфиденциальные данные вроде userId и роли.",
+        },
+        {
+          type: "mistakes",
+          title: "Ошибки новичка в авторизации",
+          items: [
+            {
+              bad: "Хранить пароли в базе в открытом виде или с обратимым «шифрованием».",
+              good: "Всегда хэшируй пароль односторонним алгоритмом (bcrypt/argon2) с солью. Проверка — через bcrypt.compare, расшифровать хэш нельзя.",
+            },
+            {
+              bad: "Класть в payload JWT чувствительные данные, считая токен «зашифрованным».",
+              good: "Payload только закодирован Base64 и читается кем угодно. Храни там лишь id и роль.",
+            },
+            {
+              bad: "Делать токен бессрочным ради удобства.",
+              good: "Всегда задавай короткий срок жизни (exp). Для «долгого» входа используй refresh-токен.",
+            },
+          ],
+        },
+      ],
+      middle: [
+        {
+          type: "text",
+          title: "Регистрация и хэширование пароля (Node + Postgres)",
+          body: "Пароль никогда не сохраняют как есть — только его хэш. bcrypt добавляет случайную соль и намеренно медленный, чтобы затруднить перебор. При регистрации хэшируем пароль и пишем пользователя в Postgres; при логине сравниваем введённый пароль с хэшем через bcrypt.compare.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+
+// РЕГИСТРАЦИЯ
+export async function register(req, res) {
+  const { email, password } = req.body
+  const hash = await bcrypt.hash(password, 10)   // соль + 10 раундов
+
+  const { rows } = await db.query(
+    "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email",
+    [email, hash]                                 // параметризованный запрос!
+  )
+  res.status(201).json({ user: rows[0] })
+}
+
+// ЛОГИН
+export async function login(req, res) {
+  const { email, password } = req.body
+  const { rows } = await db.query("SELECT * FROM users WHERE email = $1", [email])
+  const user = rows[0]
+
+  // одинаковая ошибка и для «нет юзера», и для «неверный пароль»
+  if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+    return res.status(401).json({ error: "Неверный email или пароль" })
+  }
+
+  const token = jwt.sign(
+    { userId: user.id, role: user.role },        // payload
+    process.env.JWT_SECRET,                       // секрет
+    { expiresIn: "15m" }                          // короткий срок
+  )
+  res.json({ token })
+}`,
+        },
+        {
+          type: "code",
+          lang: "sql",
+          code: `-- Таблица пользователей в Postgres
+CREATE TABLE users (
+  id            SERIAL PRIMARY KEY,
+  email         TEXT UNIQUE NOT NULL,   -- уникальный индекс = быстрый поиск + защита от дублей
+  password_hash TEXT NOT NULL,          -- храним ТОЛЬКО хэш
+  role          TEXT NOT NULL DEFAULT 'user',
+  created_at    TIMESTAMPTZ DEFAULT now()
+);`,
+        },
+        {
+          type: "text",
+          title: "Middleware проверки токена",
+          body: "Защищённые маршруты закрывают middleware: оно достаёт токен из заголовка Authorization, проверяет подпись и срок через jwt.verify, кладёт данные пользователя в req.user и передаёт управление дальше. Если токен отсутствует или невалиден — сразу 401. Для проверки прав добавляют отдельное middleware по роли (авторизация).",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// Аутентификация: есть ли валидный токен
+export function authRequired(req, res, next) {
+  const header = req.headers.authorization ?? ""
+  const token = header.startsWith("Bearer ") ? header.slice(7) : null
+  if (!token) return res.status(401).json({ error: "Нет токена" })
+
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET)  // { userId, role }
+    next()
+  } catch {
+    return res.status(401).json({ error: "Токен невалиден или истёк" })
+  }
+}
+
+// Авторизация: проверка роли
+export function requireRole(role) {
+  return (req, res, next) => {
+    if (req.user.role !== role) {
+      return res.status(403).json({ error: "Недостаточно прав" })
+    }
+    next()
+  }
+}
+
+// применение
+app.get("/me", authRequired, (req, res) => res.json({ id: req.user.userId }))
+app.delete("/users/:id", authRequired, requireRole("admin"), deleteUser)`,
+        },
+        {
+          type: "text",
+          title: "Хранение токена в React",
+          body: "На клиенте токен нужно где-то держать и прикладывать к запросам. Простой способ — в памяти или localStorage, но localStorage уязвим к XSS (вредоносный скрипт прочитает токен). Более безопасно — httpOnly cookie (JS не имеет к ней доступа), но тогда нужна защита от CSRF. Централизуй логику в одном месте: перехватчик (interceptor) добавляет заголовок автоматически.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// Клиент оборачивает fetch и подставляет токен
+async function apiFetch(url: string, options: RequestInit = {}) {
+  const token = localStorage.getItem("token")
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: \`Bearer \${token}\` } : {}),
+    },
+  })
+  if (res.status === 401) {
+    localStorage.removeItem("token")   // токен протух — на страницу входа
+    window.location.href = "/login"
+  }
+  return res
+}
+
+// Логин: сохраняем токен
+async function login(email: string, password: string) {
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  })
+  const { token } = await res.json()
+  localStorage.setItem("token", token)
+}`,
+        },
+        {
+          type: "list",
+          title: "Уровень Middle",
+          items: [
+            "bcrypt для хэширования пароля, bcrypt.compare для проверки",
+            "jwt.sign при логине и jwt.verify в middleware",
+            "Параметризованные SQL-запросы ($1, $2) против инъекций",
+            "Разделение authRequired (аутентификация) и requireRole (авторизация)",
+            "Хранение токена: localStorage (риск XSS) vs httpOnly cookie (риск CSRF)",
+            "Одинаковая ошибка для неверного email и пароля (не выдавать, что есть аккаунт)",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          body: "JWT_SECRET — это ключ ко всей системе. Держи его в переменных окружения (.env, не в git), делай длинным и случайным. Утечка секрета = злоумышленник сможет выпустить валидный токен для любого пользователя.",
+        },
+      ],
+      advanced: [
+        {
+          type: "text",
+          title: "Access и refresh токены",
+          body: "Дилемма: короткий срок жизни токена безопаснее, но заставляет часто логиниться; длинный — удобнее, но опаснее при краже. Решение — пара токенов. Access-токен короткоживущий (5–15 минут) и шлётся с каждым запросом. Refresh-токен долгоживущий (дни/недели), хранится в httpOnly cookie и используется только чтобы получить новый access-токен, когда старый истёк. Refresh-токены обычно хранят в БД, чтобы их можно было отозвать.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// Выдаём пару токенов при логине
+const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15m" })
+const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" })
+
+// refresh — в httpOnly cookie, недоступную JS (защита от XSS)
+res.cookie("refreshToken", refreshToken, {
+  httpOnly: true,
+  secure: true,          // только по HTTPS
+  sameSite: "strict",    // защита от CSRF
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+})
+res.json({ accessToken })
+
+// Обновление access-токена по refresh
+export async function refresh(req, res) {
+  const token = req.cookies.refreshToken
+  try {
+    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
+    // проверяем, что токен ещё активен в БД (не отозван)
+    const valid = await db.query("SELECT 1 FROM refresh_tokens WHERE token = $1", [token])
+    if (!valid.rowCount) return res.status(401).json({ error: "Отозван" })
+
+    const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15m" })
+    res.json({ accessToken })
+  } catch {
+    res.status(401).json({ error: "Refresh невалиден" })
+  }
+}`,
+        },
+        {
+          type: "text",
+          title: "Отзыв токенов и logout",
+          body: "Главная слабость stateless JWT: его нельзя «отозвать» до истечения срока — сервер не хранит состояние. Поэтому access делают короткоживущим. Настоящий logout и блокировку реализуют через refresh-токены в БД: при выходе строку удаляют, и обновить access больше не получится. Для мгновенного отзыва access используют blacklist в Redis (по jti — уникальному id токена).",
+        },
+        {
+          type: "table",
+          title: "JWT vs сессии на сервере",
+          headers: ["Критерий", "JWT (stateless)", "Сессии (stateful)"],
+          rows: [
+            ["Хранение состояния", "Нет, всё в токене", "На сервере (память/Redis/БД)"],
+            ["Масштабирование", "Легко, любой инстанс проверит подпись", "Нужно общее хранилище сессий"],
+            ["Отзыв доступа", "Сложно (нужен blacklist)", "Просто — удалить сессию"],
+            ["Размер запроса", "Больше (токен в каждом запросе)", "Меньше (только id сессии)"],
+            ["Подходит для", "API, микросервисы, мобильные", "Классические веб-приложения"],
+          ],
+        },
+        {
+          type: "list",
+          title: "Что показать как сильный кандидат",
+          items: [
+            "Схема access + refresh, где что хранится и зачем",
+            "Почему stateless JWT сложно отозвать и как это решают (короткий срок, blacklist, БД refresh)",
+            "httpOnly + secure + sameSite cookie против XSS и CSRF",
+            "Ротация refresh-токенов и обнаружение переиспользования (reuse detection)",
+            "Выбор алгоритма подписи: HS256 (общий секрет) vs RS256 (пара ключей)",
+            "Защита: rate limiting на /login, блокировка перебора, одинаковые тексты ошибок",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "key",
+          body: "Правило распределения: access-токен — в память/переменную (короткий, шлётся с запросами), refresh-токен — в httpOnly cookie (долгий, недоступен JS). Так минимизируется ущерб и от XSS (не украдут refresh), и от истечения (access тихо обновляется).",
+        },
+        {
+          type: "mistakes",
+          title: "Частые ошибки",
+          items: [
+            {
+              bad: "Считать, что logout на клиенте (удаление токена) реально завершает сессию.",
+              good: "Удаление на клиенте не инвалидирует токен на сервере — он валиден до exp. Нужны короткий срок access и отзыв refresh в БД.",
+            },
+            {
+              bad: "Хранить refresh-токен в localStorage.",
+              good: "localStorage уязвим к XSS. Refresh держи в httpOnly + secure + sameSite cookie.",
+            },
+            {
+              bad: "Использовать алгоритм none или не проверять alg при verify.",
+              good: "Явно указывай ожидаемый алгоритм в jwt.verify. Приём токенов с alg: none — классическая уязвимость.",
+            },
+          ],
+        },
+      ],
+    },
+    quiz: [
+      {
+        q: "В чём разница между аутентификацией и авторизацией?",
+        options: [
+          "Это одно и то же",
+          "Аутентификация — «кто ты» (проверка личности), авторизация — «что тебе можно» (проверка прав)",
+          "Аутентификация — про роли, авторизация — про пароли",
+          "Авторизация выполняется раньше аутентификации",
+        ],
+        answer: 1,
+        explain: "Сначала система устанавливает личность (аутентификация по паролю), а затем проверяет права на конкретное действие (авторизация по роли).",
+      },
+      {
+        q: "Можно ли хранить пароль пользователя в payload JWT?",
+        options: [
+          "Да, ведь токен зашифрован",
+          "Нет — payload только закодирован Base64 и читается кем угодно",
+          "Да, если использовать HS256",
+          "Можно, если срок токена короткий",
+        ],
+        answer: 1,
+        explain: "Payload JWT не шифруется, а лишь кодируется в Base64URL — любой может его декодировать. Подпись защищает от подделки, но не от чтения.",
+      },
+      {
+        q: "Зачем нужен refresh-токен рядом с access-токеном?",
+        options: [
+          "Чтобы увеличить размер запроса",
+          "Чтобы держать access короткоживущим (безопасно), но не заставлять часто логиниться",
+          "Чтобы заменить пароль",
+          "Refresh-токен шлётся с каждым запросом вместо access",
+        ],
+        answer: 1,
+        explain: "Access делают коротким ради безопасности, а долгоживущий refresh (в httpOnly cookie) позволяет тихо получать новый access без повторного входа.",
+      },
+      {
+        q: "Почему logout сложнее реализовать с stateless JWT?",
+        options: [
+          "JWT нельзя удалить из браузера",
+          "Сервер не хранит состояние, поэтому валидный токен работает до истечения exp",
+          "JWT не поддерживает logout в принципе",
+          "Нужно менять JWT_SECRET при каждом выходе",
+        ],
+        answer: 1,
+        explain: "Stateless-токен валиден до exp, и сервер о нём «не помнит». Поэтому access делают коротким, а настоящий отзыв реализуют через refresh в БД или blacklist.",
       },
     ],
   },
@@ -2085,7 +2973,7 @@ await prisma.post.create({ data: { title: "Hi", authorId: 1 } })`,
         {
           type: "text",
           title: "Индексы",
-          body: "Индекс — вспомогательная структура (обычно B-tree), ускоряющая поиск по колонке за счёт дополнительного места на диске и замедления записи. Без индекса БД делает Seq Scan (полный перебор таблицы). Индексы ставят на колонки, часто участвующие в WHERE, JOIN и ORDER BY. В составном индексе важен порядок колонок.",
+          body: "Индекс — вспомогательная структура (обычно B-tree), ускоряющая поиск по колонке за счёт дополнительного места на диске и замедления записи. Без индекса БД делает Seq Scan (полный перебо�� таблицы). Индексы ставят на колонки, часто участвующие в WHERE, JOIN и ORDER BY. В составном индексе важен порядок колонок.",
         },
         {
           type: "list",
@@ -2240,7 +3128,7 @@ const users = await prisma.user.findMany({
         {
           type: "text",
           title: "Зачем очереди",
-          body: "Тяжёлые и долгие задачи (отправка письма, генерация изображения, обработка видео, экспорт отчёта) нельзя выполнять прямо в HTTP-запросе — иначе пользователь ждёт, а таймауты и ошибки роняют UX. Такие задачи кладут в очередь и обрабатывают асинхронно фоновыми процессами. Веб-сервер о��вечает пользователю сразу («задача принята»).",
+          body: "Тяжёлые и долгие задачи (отправка письма, генерация изображения, об��аботка видео, экспорт отчёта) нельзя выполнять прямо в HTTP-запросе — иначе пользователь ждёт, а таймауты и ошибки роняют UX. Такие задачи кладут в очередь и обрабатывают асинхронно фоновыми процессами. Веб-сервер о��вечает пользователю сразу («задача принята»).",
         },
         {
           type: "text",
@@ -2331,7 +3219,7 @@ new Worker(
               good: "Делать обработчик идемпотентным — повтор при ретрае не должен дублировать эффект (проверка по ключу/статусу).",
             },
             {
-              bad: "Не ограничивать число попыток — «ядовитая» задача крутится вечно.",
+              bad: "Не ограничивать число попыток — «ядовит��я» задача крутится вечно.",
               good: "Задавать attempts + backoff и отправлять безнадёжные задачи в dead-letter очередь для разбора.",
             },
             {
@@ -2410,7 +3298,7 @@ CMD ["npm", "start"]`,
         {
           type: "text",
           title: "Жизненный цикл контейнера",
-          body: "Контейнер проходит через состояния: создан → запущен → остановлен → удалён. Важно понимать разницу: docker stop останавливает контейнер, но он остаётся в системе (его видно в docker ps -a) и его можно снова запустить через docker start. docker rm удаляет контейнер полностью. Образ при этом остаётся — удалить образ можно только через docker rmi.",
+          body: "Контейнер проходит через состояния: создан → запущен → остановлен → удалён. Важно понимать разницу: docker stop останавливает контейнер, но он остаётся в системе (его видно в docker ps -a) и его можно снова запустить через docker start. docker rm удаляет контейнер полность��. Образ при этом остаётся — удалить образ можно только через docker rmi.",
         },
         {
           type: "flow",
@@ -2545,7 +3433,7 @@ volumes:
             },
             {
               bad: "Ребилдить образ на каждый чих: docker compose up без учёта кэша.",
-              good: "compose переиспользует образ. Пересобирай явно (--build) только когда менялся Dockerfile или зависимости.",
+              good: "compose переиспользует образ. Пересобирай явно (--build) только ��огда менялся Dockerfile или зависимости.",
             },
           ],
         },
@@ -2579,7 +3467,7 @@ CMD ["node", "dist/main.js"]`,
           title: "Продвинуто",
           items: [
             "Healthcheck, non-root user (USER node), минимальные базовые образы",
-            "Кэш слоёв в CI (buildkit, cache mounts), ускорение сборки",
+            "Кэш сл��ёв в CI (buildkit, cache mounts), ускорение сборки",
             "Тэги образов по версии/коммиту, пуш в registry",
             "Мультисервисная среда (app + Postgres + Redis + воркеры) — прямо из вакансии",
             "Разница alpine/slim/distroless, безопасность образов",
@@ -2732,7 +3620,7 @@ git add . && git rebase --continue`,
           type: "list",
           title: "Middle",
           items: [
-            "Разрешение конфликтов слияния осознанно, а не наугад",
+            "Раз��ешение конфликтов слияния осознанно, а не наугад",
             "Интерактивный rebase (squash/fixup) для чистой истории перед мержем",
             "Conventional Commits (feat/fix/chore/refactor) — читаемая история и авто-changelog",
             "git stash, cherry-pick, revert (безопасный откат в общей истории)",
@@ -2818,7 +3706,7 @@ jobs:
         q: "Когда безопасно использовать rebase?",
         options: [
           "На общей ветке, которую уже используют другие",
-          "На своей локальной/личной ветке, не запушенной или только твоей",
+          "На сво��й локальной/личной ветке, не запушенной или только твоей",
           "Всегда вместо merge на main",
           "Никогда",
         ],
@@ -2848,7 +3736,7 @@ jobs:
         {
           type: "text",
           title: "Зачем и какие тесты",
-          body: "Тесты защищают от регрессий: изменил код — прогнал тесты — уверен, что не сломал существующее. Пирамида тестирования: много быстрых unit-тестов (отдельные функции/модули), меньше интеграционных (несколько модулей вместе, с БД), и совсем немного медленных end-to-end (весь путь пользователя). Инструменты: Jest или Vitest для unit/интеграции, Playwright для e2e.",
+          body: "Тесты защищают от регрессий: изменил код — прогнал тесты — уверен, что не сломал существующее. Пирамида тестирования: много быстрых unit-тестов (отдельные фу��кции/модули), меньше интеграционных (несколько модулей вместе, с БД), и совсем немного медленных end-to-end (весь путь пользователя). Инструменты: Jest или Vitest для unit/интеграции, Playwright для e2e.",
         },
         {
           type: "code",
@@ -3013,7 +3901,7 @@ it("POST /users создаёт пользователя", async () => {
         {
           type: "text",
           title: "LLM в продукте",
-          body: "LLM (large language model) — большая языковая модель (GPT, Claude, Gemini), предсказывающая следующий токен. В продукт встраивается через API: отправляешь промпт — получаешь текст или структурированный JSON. Есть также модели генерации изображений/аудио. Важно понимать границы: модель может «галлюцинировать» (уверенно выдумывать), поэтому критичные данные нужно проверять.",
+          body: "LLM (large language model) — большая языковая модель (GPT, Claude, Gemini), предсказывающая следующий токен. В продукт встраивается через API: отправляешь промпт — получаешь текст или структурированный JSON. Есть также модели генера��ии изображений/аудио. Важно понимать границы: модель может «галлюцинировать» (уверенно выдумывать), поэтому критичные данные нужно проверять.",
         },
         {
           type: "list",
@@ -3119,8 +4007,8 @@ const { embedding } = await embed({ model: "openai/text-embedding-3-small", valu
               good: "Ходить к провайдеру только с сервера (Route Handler/Server Action), ключ держать в серверных env.",
             },
             {
-              bad: "Пихать в промпт весь контекст и всю историю без ограничений.",
-              good: "Держать компактный сивтемный промпт, обрезать историю и подмешивать только релевантные куски (RAG).",
+              bad: "Пихать в промпт весь контекст и всю историю без огра��ичений.",
+              good: "Держат�� компактный сивтемный промпт, обрезать историю и подмешивать только релевантные куски (RAG).",
             },
             {
               bad: "Вставлять пользовательский текст прямо в инструкцию модели.",
