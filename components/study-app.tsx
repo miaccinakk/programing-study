@@ -208,9 +208,21 @@ export function StudyApp() {
 
             {/* Blocks */}
             <article>
-              {blocks.map((block, i) => (
-                <BlockRenderer key={`${activeId}-${level}-${i}`} block={block} id={`sec-${i}`} />
-              ))}
+              {(() => {
+                let sectionNum = 0
+                return blocks.map((block, i) => {
+                  const hasTitle = "title" in block && Boolean(block.title)
+                  if (hasTitle) sectionNum += 1
+                  return (
+                    <BlockRenderer
+                      key={`${activeId}-${level}-${i}`}
+                      block={block}
+                      id={`sec-${i}`}
+                      num={hasTitle ? sectionNum : undefined}
+                    />
+                  )
+                })
+              })()}
             </article>
 
             <footer className="mt-12 border-t border-border pt-6 text-sm text-muted-foreground">
