@@ -33,6 +33,407 @@ export const LEVELS: { id: Level; label: string; hint: string }[] = [
 
 export const curriculum: Topic[] = [
   {
+    id: "javascript",
+    title: "JavaScript ES6+",
+    icon: "Braces",
+    tagline: "Современный JavaScript: синтаксис ES6+, на котором стоит весь React",
+    levels: {
+      junior: [
+        {
+          type: "text",
+          title: "Что такое ES6 и почему это важно",
+          body: "ES6 (он же ES2015, ECMAScript 2015) — это большое обновление стандарта JavaScript, которое превратило язык из «скриптов для формочек» в полноценный инструмент для больших приложений. ECMAScript — это спецификация, а JavaScript — её реализация в браузере/Node. До ES6 был ES5 (2009), после ES6 стандарт выходит каждый год (ES2016, ES2017 …), поэтому современный код называют «ES6+» или просто «modern JavaScript». Почти весь синтаксис, который ты видишь в React (стрелки, деструктуризация, спред, модули import/export, async/await), появился именно здесь.",
+        },
+        {
+          type: "text",
+          title: "Чем ES6 отличается от старого ES5",
+          body: "Главные болячки ES5: только var с функциональной областью видимости и всплытием (hoisting), нет классов и модулей, колбэк-ад вместо промисов, многословные function-выражения, ручная конкатенация строк через +. ES6 дал: let/const с блочной областью, стрелочные функции, классы, модули, промисы, шаблонные строки, деструктуризацию, spread/rest, параметры по умолчанию. Код стал короче, безопаснее и читаемее.",
+        },
+        {
+          type: "text",
+          title: "let / const вместо var",
+          body: "var имеет функциональную область видимости и «всплывает» наверх, из-за чего легко получить неожиданное значение. let и const имеют блочную область (живут внутри {}). Практическое правило: по умолчанию всегда const, а let — только если значение реально переприсваивается. var в новом коде не используют.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// var «утекает» из блока и всплывает
+for (var i = 0; i < 3; i++) {}
+console.log(i) // 3 — var виден снаружи цикла
+
+// let/const живут только внутри блока
+for (let j = 0; j < 3; j++) {}
+// console.log(j) // ReferenceError: j is not defined
+
+const name = "Аня"   // нельзя переприсвоить
+let count = 0        // можно менять
+count = 1
+
+// const защищает переменную, но НЕ содержимое объекта
+const user = { age: 25 }
+user.age = 26        // это ок — меняем поле, а не ссылку
+// user = {}         // это ошибка — переприсваивание const`,
+        },
+        {
+          type: "text",
+          title: "Стрелочные функции",
+          body: "Стрелочные функции — короткая запись функций. Отличие не только в синтаксисе: у них НЕТ своего this — они берут его из окружающего контекста (лексический this). Именно поэтому в React колбэки почти всегда пишут стрелками. Если тело — одно выражение, return и фигурные скобки не нужны.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// обычная функция
+function sum(a, b) { return a + b }
+
+// стрелочная — то же самое
+const sum2 = (a, b) => a + b        // неявный return
+const square = (n) => n * n
+const greet = () => console.log("hi")
+
+// чтобы неявно вернуть объект — оборачивай в круглые скобки
+const toUser = (name) => ({ name, active: true })
+
+// в методах массива читается как одна мысль
+const nums = [1, 2, 3]
+const doubled = nums.map((n) => n * 2)   // [2, 4, 6]`,
+        },
+        {
+          type: "text",
+          title: "Шаблонные строки и деструктуризация",
+          body: "Шаблонные строки (обратные кавычки) позволяют вставлять выражения через ${...} и писать многострочный текст без конкатенации. Деструктуризация вытаскивает поля из объекта или элементы из массива в переменные одной строкой — это то, как в React разбирают props: function Item({ title, id }).",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `const name = "Аня"
+const age = 25
+
+// шаблонная строка вместо "Привет, " + name + "!"
+const msg = \`Привет, \${name}! Тебе \${age}.\`
+
+// деструктуризация объекта (+ значение по умолчанию)
+const user = { id: 1, name: "Аня", role: "admin" }
+const { name: userName, role = "user" } = user
+
+// деструктуризация массива
+const coords = [55.7, 37.6]
+const [lat, lng] = coords
+
+// так React разбирает props
+function Item({ title, id }) {
+  return title
+}`,
+        },
+        {
+          type: "list",
+          title: "База Junior",
+          items: [
+            "let / const и блочная область видимости (var не используем)",
+            "Стрелочные функции и лексический this",
+            "Шаблонные строки `${...}` вместо конкатенации",
+            "Деструктуризация объектов и массивов (основа разбора props)",
+            "Параметры по умолчанию: function f(x = 10) {}",
+            "Тип-приведение и разница == vs === (всегда строгое ===)",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          body: "=== сравнивает без приведения типов, == — с приведением (0 == '' → true, что почти всегда баг). В современном коде всегда используй === и !==. Исключение-приём: value == null удобно ловит сразу и null, и undefined.",
+        },
+        {
+          type: "mistakes",
+          title: "Ошибки новичка в JavaScript",
+          items: [
+            {
+              bad: "Думать, что const делает объект неизменяемым: const u = {}; u.x = 1 «должно падать».",
+              good: "const запрещает переприсваивать саму переменную, но поля объекта менять можно. Для заморозки — Object.freeze или иммутабельный подход (новый объект).",
+            },
+            {
+              bad: "Сравнивать через == и ловить баги вроде 0 == '' или null == undefined.",
+              good: "Всегда используй строгое ===. Оно не приводит типы и предсказуемо.",
+            },
+            {
+              bad: "Продолжать писать var по привычке.",
+              good: "var всплывает и не уважает блоки — источник трудноуловимых багов. Используй const, а let только при переприсваивании.",
+            },
+          ],
+        },
+      ],
+      middle: [
+        {
+          type: "text",
+          title: "Spread и rest (...)",
+          body: "Один и тот же синтаксис ... работает в двух ролях. Spread «разворачивает» массив/объект (копирование, слияние, передача аргументов). Rest, наоборот, «собирает» остаток в массив/объект. Spread — основа иммутабельных обновлений, а значит и работы со state в React: новый объект вместо мутации старого.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// spread: копия + добавление (не мутируем исходное)
+const nums = [1, 2, 3]
+const more = [...nums, 4]            // [1, 2, 3, 4]
+
+const user = { name: "Аня", age: 25 }
+const updated = { ...user, age: 26 } // копия с новым age
+
+// слияние объектов (правый перекрывает левый)
+const merged = { ...defaults, ...overrides }
+
+// rest: собрать остаток
+const [first, ...others] = [1, 2, 3, 4] // first=1, others=[2,3,4]
+const { id, ...rest } = user            // вытащили id, остальное в rest
+
+// rest в аргументах функции
+function sumAll(...args) {
+  return args.reduce((a, b) => a + b, 0)
+}`,
+        },
+        {
+          type: "text",
+          title: "Методы массивов: map / filter / reduce",
+          body: "Декларативная работа с данными вместо ручных циклов for. map преобразует каждый элемент (и возвращает новый массив той же длины), filter отбирает по условию, reduce сворачивает массив в одно значение. Они не мутируют исходный массив — идеально для React, где map превращает данные в список JSX-элементов.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `const products = [
+  { name: "A", price: 100, active: true },
+  { name: "B", price: 200, active: false },
+  { name: "C", price: 300, active: true },
+]
+
+// map — новый массив
+const names = products.map((p) => p.name)          // ["A","B","C"]
+
+// filter — отбор по условию
+const active = products.filter((p) => p.active)     // A и C
+
+// reduce — свёртка в одно значение
+const total = products.reduce((sum, p) => sum + p.price, 0) // 600
+
+// цепочка — читается как SQL
+const activeTotal = products
+  .filter((p) => p.active)
+  .reduce((sum, p) => sum + p.price, 0)              // 400
+
+// find / some / every
+products.find((p) => p.name === "B")  // объект B
+products.some((p) => p.price > 250)   // true
+products.every((p) => p.active)       // false`,
+        },
+        {
+          type: "text",
+          title: "Модули: import / export",
+          body: "ES-модули (ESM) заменили разрозненные <script> и старый CommonJS (require/module.exports). Каждый файл — это модуль со своей областью видимости. Есть именованные экспорты (сколько угодно на файл) и один export default. Именно ESM понимают сборщики Vite/Next и tree-shaking (выкидывание неиспользуемого кода).",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// utils.js — именованные экспорты
+export const PI = 3.14
+export function sum(a, b) { return a + b }
+
+// button.jsx — экспорт по умолчанию (один на файл)
+export default function Button() {}
+
+// импорт
+import Button from "./button"              // default
+import { sum, PI } from "./utils"          // именованные
+import { sum as add } from "./utils"       // переименование
+import * as utils from "./utils"           // всё пространство имён
+
+// CommonJS (старый стиль Node) — для сравнения
+// const { sum } = require("./utils")`,
+        },
+        {
+          type: "text",
+          title: "Промисы и async/await",
+          body: "Промис — объект, представляющий результат асинхронной операции в будущем (pending → fulfilled/rejected). async/await — синтаксический сахар над промисами: асинхронный код читается как обычный последовательный. await «ждёт» результат, а ошибки ловят через try/catch. Это то, как в React/Next грузят данные из API.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// промис через .then/.catch
+fetch("/api/users")
+  .then((res) => res.json())
+  .then((data) => console.log(data))
+  .catch((err) => console.error(err))
+
+// то же самое через async/await — читается сверху вниз
+async function loadUsers() {
+  try {
+    const res = await fetch("/api/users")
+    if (!res.ok) throw new Error("HTTP " + res.status)
+    const data = await res.json()
+    return data
+  } catch (err) {
+    console.error("Не удалось загрузить:", err)
+  }
+}
+
+// параллельно, а не по очереди
+const [users, posts] = await Promise.all([
+  fetch("/api/users").then((r) => r.json()),
+  fetch("/api/posts").then((r) => r.json()),
+])`,
+        },
+        {
+          type: "list",
+          title: "Уровень Middle",
+          items: [
+            "Spread/rest для иммутабельных обновлений (связка со state React)",
+            "map / filter / reduce / find / some / every вместо циклов for",
+            "ES-модули import/export и отличие от CommonJS require",
+            "Промисы, async/await, Promise.all / allSettled / race",
+            "Опциональная цепочка ?. и нулевое слияние ?? (ES2020)",
+            "Короткие свойства и вычисляемые ключи объекта: { [key]: value }",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "warn",
+          body: "await внутри цикла выполняет запросы по очереди (медленно). Если запросы независимы — собери промисы и дождись их разом через Promise.all. Разница между «5 секунд по очереди» и «1 секунда параллельно» — частый вопрос на собеседовании.",
+        },
+      ],
+      advanced: [
+        {
+          type: "text",
+          title: "Замыкания (closures)",
+          body: "Замыкание — это функция вместе с «запомненным» окружением, в котором она была создана. Внутренняя функция сохраняет доступ к переменным внешней даже после того, как внешняя завершилась. На замыканиях держатся кастомные хуки React, приватные счётчики и стабильные ссылки. Классический баг — «устаревшее замыкание» (stale closure), когда колбэк помнит старое значение state.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `function createCounter() {
+  let count = 0                 // приватная переменная
+  return {
+    inc: () => ++count,         // замыкание помнит count
+    get: () => count,
+  }
+}
+const c = createCounter()
+c.inc(); c.inc()
+c.get() // 2 — count живёт в замыкании, снаружи недоступен
+
+// stale closure: без правильных deps колбэк помнит старое значение
+// setInterval(() => setCount(count + 1), 1000) // всегда 0 + 1
+// правильно: setCount((prev) => prev + 1)`,
+        },
+        {
+          type: "text",
+          title: "this, call/apply/bind",
+          body: "Значение this зависит от того, КАК вызвана функция, а не где объявлена. У обычной функции this определяется в момент вызова (может «потеряться» при передаче как колбэк), у стрелочной — берётся лексически из окружения. call/apply вызывают функцию с явным this, bind возвращает новую функцию с привязанным this. Стрелки в ES6 во многом убрали боль с this.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `const user = {
+  name: "Аня",
+  regular() { return this.name },     // this = user
+  arrow: () => this,                  // this из окружения, НЕ user
+}
+
+// потеря this при передаче метода как колбэка
+const fn = user.regular
+// fn() // undefined — this потерян
+
+// фиксируем this
+const bound = user.regular.bind(user)
+bound() // "Аня"
+
+// опциональная цепочка и нулевое слияние (ES2020)
+const city = user?.address?.city ?? "не указан"`,
+        },
+        {
+          type: "text",
+          title: "Event loop, микро- и макрозадачи",
+          body: "JavaScript однопоточный, но неблокирующий: тяжёлые асинхронные операции уходят в Web API/Node, а результат возвращается через очереди. Event loop сначала опустошает очередь микрозадач (промисы, queueMicrotask), потом берёт одну макрозадачу (setTimeout, события). Поэтому Promise.then выполнится раньше, чем setTimeout(…, 0). Это популярный «трюковый» вопрос на собеседовании.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `console.log("1")
+setTimeout(() => console.log("2"), 0)   // макрозадача
+Promise.resolve().then(() => console.log("3")) // микрозадача
+console.log("4")
+
+// Порядок вывода: 1, 4, 3, 2
+// синхронный код -> микрозадачи (Promise) -> макрозадачи (setTimeout)`,
+        },
+        {
+          type: "list",
+          title: "Что показать как сильный кандидат",
+          items: [
+            "Замыкания и связь со stale closure в хуках React",
+            "Как работает this и почему стрелки его не имеют",
+            "Event loop: микрозадачи vs макрозадачи, порядок выполнения",
+            "Иммутабельность и почему мутация ломает сравнение по ссылке",
+            "Копия по значению vs по ссылке; поверхностная vs глубокая копия",
+            "Итераторы, генераторы (function*) и protocol Symbol.iterator",
+          ],
+        },
+        {
+          type: "mistakes",
+          title: "Частые ошибки",
+          items: [
+            {
+              bad: "Считать, что ...spread делает глубокую копию вложенных объектов.",
+              good: "Spread копирует только верхний уровень (поверхностно). Вложенные объекты остаются по ссылке — их тоже нужно копировать при обновлении.",
+            },
+            {
+              bad: "Мутировать массив методами push/splice/sort там, где нужна новая ссылка.",
+              good: "Используй немутирующие аналоги: [...arr], arr.map, arr.filter, [...arr].sort() — особенно для state React.",
+            },
+            {
+              bad: "Полагаться на this внутри обычной функции-колбэка, переданной куда-то.",
+              good: "Используй стрелочную функцию (лексический this) или заранее bind, чтобы this не потерялся.",
+            },
+            {
+              bad: "Делать await по очереди для независимых запросов.",
+              good: "Запускай параллельно через Promise.all — заметно быстрее.",
+            },
+          ],
+        },
+      ],
+    },
+    quiz: [
+      {
+        q: "В чём главное отличие let/const от var?",
+        options: [
+          "let/const быстрее выполняются",
+          "let/const имеют блочную область видимости, var — функциональную и всплывает",
+          "var нельзя использовать в браузере",
+          "Разницы нет, это синонимы",
+        ],
+        answer: 1,
+        explain: "var видна во всей функции и всплывает наверх, из-за чего легко получить неожиданное значение. let/const живут только внутри своего блока {}.",
+      },
+      {
+        q: "Почему стрелочные функции удобны для колбэков в React?",
+        options: [
+          "Они выполняются быстрее обычных",
+          "У них нет своего this — он берётся из окружающего контекста",
+          "Они автоматически асинхронные",
+          "Они не создают замыканий",
+        ],
+        answer: 1,
+        explain: "Стрелка не имеет собственного this и берёт его лексически из места объявления, поэтому this не «теряется» при передаче функции как обработчика события.",
+      },
+      {
+        q: "Что вернёт [1,2,3].reduce((a, b) => a + b, 0)?",
+        options: ["[1,2,3]", "6", "0", "undefined"],
+        answer: 1,
+        explain: "reduce сворачивает массив в одно значение: 0+1+2+3 = 6. Второй аргумент (0) — начальное значение аккумулятора.",
+      },
+      {
+        q: "Что выведет: console.log(1); setTimeout(()=>console.log(2),0); Promise.resolve().then(()=>console.log(3)); console.log(4)?",
+        options: ["1 2 3 4", "1 4 3 2", "1 4 2 3", "1 2 4 3"],
+        answer: 1,
+        explain: "Сначала синхронный код (1, 4), затем микрозадачи-промисы (3), и только потом макрозадачи setTimeout (2). Итог: 1, 4, 3, 2.",
+      },
+    ],
+  },
+  {
     id: "typescript",
     title: "TypeScript",
     icon: "FileType",
@@ -293,7 +694,7 @@ config.port  // остаётся number, а не unknown`,
           title: "Частые ошибки",
           items: [
             {
-              bad: "Затыкать ошибки типов через as any или // @ts-ignore, лишь ��ы компилятор молчал.",
+              bad: "Затыкать ошибки типов через as any или // @ts-ignore, лишь ����ы компилятор молчал.",
               good: "Разобраться в типе: сузить через unknown + проверки, поправить сигнатуру или описать корректный тип.",
             },
             {
@@ -406,6 +807,99 @@ function Item({ label, onDelete, id }: Props) {
 }`,
         },
         {
+          type: "text",
+          title: "Как передаются данные между компонентами",
+          body: "Базовый способ связи — props. Родитель передаёт данные вниз как атрибуты, а чтобы сообщить наверх о событии, передаёт вниз функцию-колбэк, которую ребёнок вызывает. Так рождается схема «данные вниз, события вверх». Ещё один приём — children: передать вложенную разметку как содержимое компонента (композиция).",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// РОДИТЕЛЬ хранит state и передаёт данные + колбэк вниз
+function TodoList() {
+  const [todos, setTodos] = useState<string[]>(["Купить хлеб"])
+
+  const addTodo = (text: string) => setTodos((prev) => [...prev, text])
+  const removeTodo = (i: number) =>
+    setTodos((prev) => prev.filter((_, idx) => idx !== i))
+
+  return (
+    <div>
+      <AddForm onAdd={addTodo} />           {/* колбэк вниз */}
+      <ul>
+        {todos.map((t, i) => (
+          <TodoItem key={i} text={t} onRemove={() => removeTodo(i)} />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+// РЕБЁНОК получает данные и «стреляет» событием наверх
+function TodoItem({ text, onRemove }: { text: string; onRemove: () => void }) {
+  return (
+    <li>
+      {text} <button onClick={onRemove}>x</button>
+    </li>
+  )
+}`,
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// children — передача разметки внутрь компонента (композиция)
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="card">
+      <h2>{title}</h2>
+      {children}          {/* сюда попадёт всё, что вложили */}
+    </section>
+  )
+}
+
+// использование
+<Card title="Профиль">
+  <p>Любой контент внутри</p>
+  <button>Кнопка</button>
+</Card>`,
+        },
+        {
+          type: "text",
+          title: "Controlled inputs (управляемые поля)",
+          body: "В управляемом поле источник истины — это state React, а не сам DOM. value привязан к state, а onChange обновляет его на каждый ввод. Так React всегда знает актуальное значение и может его валидировать, форматировать или блокировать кнопку отправки.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `function LoginForm() {
+  const [email, setEmail] = useState("")
+  const [agree, setAgree] = useState(false)
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault()          // не перезагружать страницу
+    console.log({ email, agree })
+  }
+
+  return (
+    <form onSubmit={onSubmit}>
+      <input
+        type="email"
+        value={email}                                  // state -> поле
+        onChange={(e) => setEmail(e.target.value)}     // поле -> state
+      />
+      <label>
+        <input
+          type="checkbox"
+          checked={agree}
+          onChange={(e) => setAgree(e.target.checked)}
+        />
+        Согласен
+      </label>
+      <button type="submit" disabled={!agree}>Войти</button>
+    </form>
+  )
+}`,
+        },
+        {
           type: "list",
           title: "База Junior",
           items: [
@@ -486,6 +980,96 @@ const handleClick = useCallback(() => save(id), [id])`,
   }, [value, delay])
   return debounced
 }`,
+        },
+        {
+          type: "text",
+          title: "Подъём состояния и prop drilling",
+          body: "Если двум соседним компонентам нужно одно и то же состояние — его поднимают в ближайшего общего родителя (lifting state up) и передают вниз через props. Проблема появляется, когда данные нужно протащить через много уровней, где промежуточные компоненты их даже не используют — это и есть prop drilling. Лечится композицией (children) или, для по-настоящему сквозных данных, через Context.",
+        },
+        {
+          type: "text",
+          title: "useContext вместо сквозных props",
+          body: "Context — способ раздать данные всему поддереву без ручной передачи через каждый уровень. Типичные кандидаты: тема оформления, текущий пользователь, язык. Важно: Context решает проблему «протаскивания», но НЕ заменяет полноценный стейт-менеджер и может вызывать лишние ререндеры, если положить в него часто меняющееся значение.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// 1. создаём контекст
+type Theme = "light" | "dark"
+const ThemeContext = createContext<Theme>("light")
+
+// 2. оборачиваем поддерево провайдером
+function App() {
+  const [theme, setTheme] = useState<Theme>("dark")
+  return (
+    <ThemeContext.Provider value={theme}>
+      <Toolbar />        {/* не передаём theme через props */}
+    </ThemeContext.Provider>
+  )
+}
+
+// 3. любой потомок читает значение напрямую
+function ThemedButton() {
+  const theme = useContext(ThemeContext)
+  return <button className={theme}>Кнопка</button>
+}`,
+        },
+        {
+          type: "text",
+          title: "Подходы к организации логики",
+          body: "Компоненты — не единственный «кирпич». Переиспользуемую логику со state выносят в кастомные хуки (современный дефолт). Устаревшие, но встречающиеся паттерны: HOC (компонент-обёртка, возвращающая новый компонент) и render props (передача функции как children). Ещё популярна связка «умный контейнер + глупый презентационный компонент»: один отвечает за данные, другой только за отображение.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// Презентационный (глупый) компонент — только UI, данные через props
+function UserCard({ name, email }: { name: string; email: string }) {
+  return <div>{name} — {email}</div>
+}
+
+// Контейнер (умный) — отвечает за данные и логику
+function UserCardContainer({ id }: { id: number }) {
+  const { data, isLoading } = useUser(id)   // кастомный хук
+  if (isLoading) return <Skeleton />
+  return <UserCard name={data.name} email={data.email} />
+}
+
+// Кастомный хук инкапсулирует загрузку — переиспользуемая логика
+function useUser(id: number) {
+  // ... useState / TanStack Query внутри
+}`,
+        },
+        {
+          type: "text",
+          title: "Структура проекта",
+          body: "Для маленького приложения хватает группировки по типу файлов (components/, hooks/, utils/). Но с ростом кода это неудобно — код одной фичи разбросан по папкам. Более масштабируемый подход — feature-based (или feature-sliced): код группируется вокруг фич, а общее переиспользуемое лежит в shared. Главное правило любой структуры — предсказуемость: по имени фичи легко найти всё, что к ней относится.",
+        },
+        {
+          type: "code",
+          lang: "bash",
+          code: `# По типу файлов — ок для маленьких проектов
+src/
+  components/    # все компоненты вперемешку
+  hooks/
+  utils/
+  types/
+
+# Feature-based — масштабируется лучше
+src/
+  features/
+    auth/
+      components/   # LoginForm, SignupForm
+      hooks/        # useAuth
+      api.ts        # запросы этой фичи
+      types.ts
+    cart/
+      components/
+      hooks/
+      api.ts
+  shared/          # переиспользуемое между фичами
+    ui/            # Button, Input, Modal
+    lib/           # хелперы, форматтеры
+  app/             # роутинг, провайдеры, вход в приложение`,
         },
         {
           type: "list",
@@ -676,6 +1260,57 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           body: 'Ключевая развилка: серверный компонент по умолчанию (можно await данные, ходить в БД, не тащит JS в браузер). Как только нужен useState/useEffect/onClick — добавляешь "use client" и компонент становится клиентским.',
         },
         {
+          type: "text",
+          title: "Структура проекта App Router",
+          body: "В App Router структура папок = структура маршрутов. Внутри app/ каждая папка — это сегмент URL, а специальные файлы (page, layout, loading, error) задают поведение. Компоненты, которые не являются страницами, обычно держат вне app/ (в components/, lib/, features/), чтобы не засорять роутинг. Приватные папки с префиксом _ (например _components) в маршруты не попадают.",
+        },
+        {
+          type: "code",
+          lang: "bash",
+          code: `src/
+  app/
+    layout.tsx          # корневой layout (html, body, провайдеры)
+    page.tsx            # маршрут "/"
+    globals.css
+    blog/
+      page.tsx          # "/blog"
+      loading.tsx       # скелетон при загрузке /blog
+      [slug]/
+        page.tsx        # "/blog/:slug" — динамический сегмент
+    (marketing)/        # группа: в URL не попадает
+      about/page.tsx    # "/about"
+    api/
+      users/route.ts    # эндпоинт "/api/users"
+  components/           # переиспользуемый UI вне роутинга
+  lib/                  # db, утилиты, серверные хелперы
+  features/             # код по фичам (auth, cart ...)`,
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// app/layout.tsx — общая обёртка, переживает переходы
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="ru">
+      <body>
+        <Header />
+        {children}     {/* сюда рендерится текущая page */}
+        <Footer />
+      </body>
+    </html>
+  )
+}
+
+// app/blog/loading.tsx — авто-Suspense: показывается, пока грузится page
+export default function Loading() {
+  return <p>Загрузка…</p>
+}`,
+        },
+        {
           type: "mistakes",
           title: "Ошибки новичка в Next.js",
           items: [
@@ -739,6 +1374,35 @@ export default function Form() {
       <button type="submit">Добавить</button>
     </form>
   )
+}`,
+        },
+        {
+          type: "text",
+          title: "Загрузка данных и передача в клиент",
+          body: "В App Router данные грузят прямо в серверном компоненте через await — без useEffect, без стейта загрузки. Готовые данные передают вниз как props, в том числе в клиентские компоненты (данные должны быть сериализуемы — без функций и классов). Независимые запросы запускают параллельно через Promise.all, чтобы не ждать их по очереди (водопад запросов).",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// Серверный компонент грузит данные и отдаёт их клиентскому
+async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
+  // параллельно, а не по очереди
+  const [product, reviews] = await Promise.all([
+    getProduct(id),
+    getReviews(id),
+  ])
+
+  // данные -> в интерактивный клиентский компонент через props
+  return <ProductView product={product} reviews={reviews} />
+}
+
+// ProductView.tsx — интерактив живёт здесь
+"use client"
+function ProductView({ product, reviews }: Props) {
+  const [tab, setTab] = useState("info")   // локальный UI-стейт
+  return <>{/* ... */}</>
 }`,
         },
         {
@@ -865,6 +1529,247 @@ fetch(url, { cache: "no-store" })`,
         ],
         answer: 1,
         explain: 'Server Actions ("use server") выполняются на сервере, вызываются с клиента (в т.ч. через action формы) и удобны для мутаций с ревалидацией кэша.',
+      },
+    ],
+  },
+  {
+    id: "vite",
+    title: "Vite",
+    icon: "Zap",
+    tagline: "Молниеносный дев-сервер и сборщик — стандарт для React без фреймворка",
+    levels: {
+      junior: [
+        {
+          type: "text",
+          title: "Что такое Vite и зачем он нужен",
+          body: "Vite (фр. «быстро», произносится «вит») — это инструмент сборки фронтенда: он поднимает дев-сервер во время разработки и собирает оптимизированный бандл для продакшена. Браузер не понимает JSX, TypeScript и import из node_modules напрямую — нужен инструмент, который всё это преобразует. Раньше эту роль играли Create React App (CRA) и webpack, но они медленные на больших проектах. Vite стал де-факто стандартом для React-приложений, которым не нужен полноценный фреймворк вроде Next.js.",
+        },
+        {
+          type: "text",
+          title: "Почему Vite такой быстрый",
+          body: "Секрет в двух вещах. Первое: в режиме разработки Vite не собирает весь проект в один бандл, а раздаёт файлы как нативные ES-модули (ESM) — браузер сам запрашивает только то, что нужно для текущей страницы. Второе: тяжёлую предобработку зависимостей делает esbuild, написанный на Go, — он в десятки раз быстрее JS-сборщиков. Поэтому дев-сервер стартует почти мгновенно независимо от размера проекта, а изменения применяются моментально.",
+        },
+        {
+          type: "text",
+          title: "HMR — горячая замена модулей",
+          body: "HMR (Hot Module Replacement) обновляет только изменённый модуль в браузере без полной перезагрузки страницы, сохраняя состояние приложения (открытую вкладку, введённый текст, позицию скролла). У Vite HMR остаётся быстрым даже когда проект вырастает, потому что заменяется один модуль, а не пересобирается всё.",
+        },
+        {
+          type: "code",
+          lang: "bash",
+          code: `# создать новый проект (React + TypeScript)
+npm create vite@latest my-app -- --template react-ts
+
+cd my-app
+npm install
+
+# основные команды
+npm run dev       # дев-сервер с HMR (обычно http://localhost:5173)
+npm run build     # прод-сборка в папку dist/
+npm run preview   # локально посмотреть собранный прод-бандл`,
+        },
+        {
+          type: "list",
+          title: "База Junior",
+          items: [
+            "Vite = дев-сервер (разработка) + бандлер (прод-сборка)",
+            "npm create vite@latest — быстрый старт с шаблоном",
+            "dev / build / preview — три главные команды",
+            "Точка входа — index.html в корне (а не в public, как у CRA)",
+            "HMR: изменения видны мгновенно, состояние сохраняется",
+            "Итог сборки лежит в папке dist/",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          body: "Create React App (CRA) официально устарел — новые React-проекты без фреймворка стартуют на Vite. Если тебя спросят «чем поднять чистый React», правильный ответ сегодня — Vite (или сразу фреймворк вроде Next.js, если нужен SSR/роутинг).",
+        },
+        {
+          type: "mistakes",
+          title: "Ошибки новичка с Vite",
+          items: [
+            {
+              bad: "Обращаться к переменным окружения через process.env.API_URL.",
+              good: "В Vite это import.meta.env, а публичные переменные должны начинаться с префикса VITE_ (например import.meta.env.VITE_API_URL).",
+            },
+            {
+              bad: "Искать точку входа index.html в папке public, как в CRA.",
+              good: "В Vite index.html лежит в корне проекта и является точкой входа — именно он подключает /src/main.tsx.",
+            },
+            {
+              bad: "Класть секреты (ключи API) в переменные с префиксом VITE_.",
+              good: "Всё с префиксом VITE_ попадает в бандл и видно в браузере. Секреты держи только на бэкенде.",
+            },
+          ],
+        },
+      ],
+      middle: [
+        {
+          type: "text",
+          title: "Конфигурация и плагины",
+          body: "Настройки живут в vite.config.ts. Функциональность добавляют плагинами: @vitejs/plugin-react (или SWC-версия) включает поддержку JSX и Fast Refresh. Здесь же удобно задать алиасы путей (@/ вместо ../../..), настроить прокси для API в деве, поменять порт.",
+        },
+        {
+          type: "code",
+          lang: "ts",
+          code: `import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
+import path from "node:path"
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: { "@": path.resolve(__dirname, "./src") },  // import "@/components/..."
+  },
+  server: {
+    port: 3000,
+    proxy: {
+      // запросы на /api уходят на бэкенд без CORS-проблем в деве
+      "/api": { target: "http://localhost:8080", changeOrigin: true },
+    },
+  },
+})`,
+        },
+        {
+          type: "text",
+          title: "Переменные окружения",
+          body: "Vite читает .env-файлы и подставляет значения через import.meta.env. Наружу (в браузерный бандл) попадают только переменные с префиксом VITE_ — это защита от случайной утечки секретов. Есть встроенные import.meta.env.DEV / PROD / MODE для определения окружения.",
+        },
+        {
+          type: "code",
+          lang: "ts",
+          code: `// .env
+// VITE_API_URL=https://api.example.com
+// SECRET_KEY=xxx   <- без VITE_, в браузер НЕ попадёт
+
+const apiUrl = import.meta.env.VITE_API_URL   // доступно в коде
+const isDev = import.meta.env.DEV             // true в режиме разработки
+
+// типизация переменных (src/vite-env.d.ts)
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string
+}`,
+        },
+        {
+          type: "list",
+          title: "Уровень Middle",
+          items: [
+            "vite.config.ts: plugins, resolve.alias, server.proxy",
+            "@vitejs/plugin-react vs plugin-react-swc (SWC быстрее)",
+            "import.meta.env и префикс VITE_ для публичных переменных",
+            "Импорт статики: import img from './logo.png', ?raw, ?url",
+            "Динамический import() для code splitting и ленивой загрузки",
+            "Прокси в деве, чтобы обойти CORS при обращении к бэкенду",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "key",
+          body: "Ключевое отличие в архитектуре: в деве Vite использует нативные ESM (esbuild, без бандлинга), а для прод-сборки под капотом применяет Rollup (bundling + tree-shaking + минификация). Понимать эту разницу «dev на esbuild, prod на Rollup» — хороший сигнал на собеседовании.",
+        },
+      ],
+      advanced: [
+        {
+          type: "text",
+          title: "Оптимизация прод-сборки",
+          body: "Для продакшена Vite собирает бандл через Rollup: делает tree-shaking (выкидывает неиспользуемый код), минификацию и code splitting по динамическим import(). Крупные приложения делят на чанки, чтобы браузер не грузил весь код сразу. Ленивая загрузка страниц через React.lazy + Suspense заметно ускоряет первую отрисовку.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `import { lazy, Suspense } from "react"
+
+// код страницы попадёт в отдельный чанк и загрузится по требованию
+const Dashboard = lazy(() => import("./pages/Dashboard"))
+
+function App() {
+  return (
+    <Suspense fallback={<p>Загрузка…</p>}>
+      <Dashboard />
+    </Suspense>
+  )
+}
+
+// ручное разбиение вендорного чанка в vite.config.ts
+// build: { rollupOptions: { output: { manualChunks: { react: ["react", "react-dom"] } } } }`,
+        },
+        {
+          type: "list",
+          title: "Что показать как сильный кандидат",
+          items: [
+            "Dev на esbuild (ESM, без бандла) vs prod на Rollup (бандл + tree-shaking)",
+            "Code splitting: динамический import() + React.lazy/Suspense",
+            "Анализ размера бандла (rollup-plugin-visualizer) и borьба с раздутием",
+            "Написание/использование Vite-плагинов и хуков жизненного цикла",
+            "SSR-режим Vite и почему для полноценного SSR берут фреймворк",
+            "Vitest как нативный тест-раннер, переиспользующий конфиг Vite",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "warn",
+          body: "Vite сам по себе не даёт SSR, роутинг и серверные возможности «из коробки» — это просто сборщик для SPA. Если нужны серверный рендер, файловый роутинг и API — берут фреймворк (Next.js, Remix), а не пытаются достроить это поверх голого Vite.",
+        },
+        {
+          type: "mistakes",
+          title: "Частые ошибки",
+          items: [
+            {
+              bad: "Ожидать от Vite серверного рендера и роутинга как в Next.js.",
+              good: "Vite — сборщик для SPA. Для SSR/роутинга/API выбирай фреймворк поверх него или Next.js.",
+            },
+            {
+              bad: "Не настраивать code splitting — один гигантский бандл на всё приложение.",
+              good: "Дели код динамическим import() и React.lazy; выноси крупные зависимости в отдельные чанки.",
+            },
+            {
+              bad: "Тащить в клиент секреты через VITE_-переменные.",
+              good: "Всё с префиксом VITE_ видно в браузере. Секреты — только на сервере, без этого префикса.",
+            },
+          ],
+        },
+      ],
+    },
+    quiz: [
+      {
+        q: "Почему дев-сервер Vite стартует быстро даже на больших проектах?",
+        options: [
+          "Он кэширует весь бандл на диск",
+          "В деве он раздаёт нативные ES-модули без бандлинга, а зависимости обрабатывает esbuild",
+          "Он игнорирует часть файлов",
+          "Он использует webpack в фоне",
+        ],
+        answer: 1,
+        explain: "В режиме разработки Vite не собирает единый бандл, а отдаёт файлы как ESM (браузер грузит нужное по требованию), а предобработку делает быстрый esbuild на Go.",
+      },
+      {
+        q: "Как в коде получить переменную окружения в Vite?",
+        options: [
+          "process.env.VITE_API_URL",
+          "import.meta.env.VITE_API_URL",
+          "window.env.API_URL",
+          "require('dotenv')",
+        ],
+        answer: 1,
+        explain: "Vite подставляет переменные через import.meta.env, и только те, что начинаются с VITE_, попадают в клиентский бандл.",
+      },
+      {
+        q: "Что Vite использует для прод-сборки?",
+        options: ["esbuild", "webpack", "Rollup", "Parcel"],
+        answer: 2,
+        explain: "В деве — esbuild + нативные ESM, а для продакшена Vite собирает бандл через Rollup с tree-shaking, минификацией и code splitting.",
+      },
+      {
+        q: "Что из этого Vite НЕ делает сам по себе?",
+        options: [
+          "Дев-сервер с HMR",
+          "Прод-сборку бандла",
+          "Серверный рендеринг и файловый роутинг из коробки",
+          "Преобразование JSX/TS",
+        ],
+        answer: 2,
+        explain: "Vite — сборщик для SPA. SSR, файловый роутинг и API дают фреймворки (Next.js, Remix), построенные поверх подобных инструментов.",
       },
     ],
   },
@@ -1065,7 +1970,7 @@ create(@Req() req, @Body() dto: CreatePostDto) {
         options: [
           "За валидацию тела запроса",
           "За форматирование ошибок",
-          "За решение, пропу��тить ли запрос (авторизация/доступ)",
+          "За решение, про��у��тить ли запрос (авторизация/доступ)",
           "За логирование ответа",
         ],
         answer: 2,
@@ -1105,7 +2010,7 @@ create(@Req() req, @Body() dto: CreatePostDto) {
         {
           type: "text",
           title: "Реляционная модель",
-          body: "PostgreSQL — реляционная СУБД. Данные хранятся в таблицах со строгой схемой (колонки, типы, ограничения). Таблицы связаны через внешние ключи (foreign key). Основные связи: один-ко-многим (у пользо��ателя много заказов), многие-ко-многим (через промежуточную таблицу). Ограничения (PRIMARY KEY, UNIQUE, NOT NULL, CHECK) защищают целостность данных.",
+          body: "PostgreSQL — реляционная СУБД. Данные хранятся в таблицах со строгой схемой (колонки, типы, ограничения). Таблицы связаны через внешние ключи (foreign key). Основные связи: один-ко-многим (у по��ьзо��ателя много заказов), многие-ко-многим (через промежуточную таблицу). Ограничения (PRIMARY KEY, UNIQUE, NOT NULL, CHECK) защищают целостность данных.",
         },
         {
           type: "text",
@@ -1335,7 +2240,7 @@ const users = await prisma.user.findMany({
         {
           type: "text",
           title: "Зачем очереди",
-          body: "Тяжёлые и долгие задачи (отправка письма, генерация изображения, обработка видео, экспорт отчёта) нельзя выполнять прямо в HTTP-запросе — иначе пользователь ждёт, а таймауты и ошибки роняют UX. Такие задачи кладут в очередь и обрабатывают асинхронно фоновыми процессами. Веб-сервер отвечает пользователю сразу («задача принята»).",
+          body: "Тяжёлые и долгие задачи (отправка письма, генерация изображения, обработка видео, экспорт отчёта) нельзя выполнять прямо в HTTP-запросе — иначе пользователь ждёт, а таймауты и ошибки роняют UX. Такие задачи кладут в очередь и обрабатывают асинхронно фоновыми процессами. Веб-сервер о��вечает пользователю сразу («задача принята»).",
         },
         {
           type: "text",
@@ -1952,7 +2857,7 @@ jobs:
 import { sum } from "./sum"
 
 describe("sum", () => {
-  it("складывает два числа", () => {
+  it("с��ладывает два числа", () => {
     expect(sum(2, 3)).toBe(5)
   })
 
@@ -2011,7 +2916,7 @@ test("счётчик увеличивается по клику", async () => {
         {
           type: "text",
           title: "Интеграционные и e2e",
-          body: "Интеграционные тесты проверяют связку модулей (например контроллер + сервис + реальная тестоввя БД в Docker). e2e через Playwright гоняют реальный браузер по сценарию пользователя. В NestJS e2e делают через supertest и тевтовый модуль приложения. Данные между тестами изолируют (транзакция с откатом или чистка БД).",
+          body: "Интеграционные тесты проверяют связку модулей (например контроллер + сервис + реальная тестоввя БД в Docker). e2e через Playwright гоняют реальный браузер по сценарию пользователя. В NestJS e2e делают через supertest и тевтовый модуль приложения. Данные между тестами и��олируют (транзакция с откатом или чистка БД).",
         },
         {
           type: "code",
@@ -2160,7 +3065,7 @@ const { object } = await generateObject({
           type: "list",
           title: "Middle",
           items: [
-            "Промпт-инжиниринг: чёткие инструкции, примеры (few-shot), ограничения",
+            "Промпт-инжиниринг: чёткие инструкции, примеры (few-shot), ��граничения",
             "Выбор модели под задачу: баланс цена / скорость / качество",
             "Контроль качества: валидация вывода, ретраи при невалидном JSON",
             "Стриминг в UI (useChat из AI SDK) и обработка ошибок/лимитов",
