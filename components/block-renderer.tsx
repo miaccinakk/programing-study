@@ -3,10 +3,10 @@ import type { Block } from "@/lib/curriculum"
 import { CodeBlock } from "@/components/code-block"
 
 const calloutStyles = {
-  tip: { icon: Lightbulb, cls: "border-emerald-500/60 bg-emerald-500/10", ic: "text-emerald-400" },
-  warn: { icon: AlertTriangle, cls: "border-amber-500/60 bg-amber-500/10", ic: "text-amber-400" },
-  key: { icon: KeyRound, cls: "border-sky-500/60 bg-sky-500/10", ic: "text-sky-400" },
-  danger: { icon: Ban, cls: "border-red-500/60 bg-red-500/10", ic: "text-red-400" },
+  tip: { icon: Lightbulb, cls: "border-ok/70 bg-ok/10", ic: "text-ok" },
+  warn: { icon: AlertTriangle, cls: "border-warn/70 bg-warn/10", ic: "text-warn" },
+  key: { icon: KeyRound, cls: "border-brand/70 bg-brand/10", ic: "text-brand" },
+  danger: { icon: Ban, cls: "border-danger/70 bg-danger/10", ic: "text-danger" },
 } as const
 
 export function BlockRenderer({ block }: { block: Block }) {
