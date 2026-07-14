@@ -50,15 +50,16 @@ export function StudyApp() {
   const blocks = topic.levels[level]
   const levelMeta = LEVELS.find((l) => l.id === level)!
 
-  // Пилюли для hero — ключевые понятия из заголовков текущего уровня
-  const pills = useMemo(
+  // Секции текущего уровня для мини-навигации и hero-пилюль (все блоки с заголовком)
+  const sections = useMemo(
     () =>
       blocks
-        .filter((b) => (b.type === "text" || b.type === "list") && b.title)
-        .map((b) => (b as { title: string }).title)
-        .slice(0, 6),
+        .map((b, i) => ({ block: b, i }))
+        .filter(({ block }) => "title" in block && block.title)
+        .map(({ block, i }) => ({ id: `sec-${i}`, title: (block as { title: string }).title })),
     [blocks],
   )
+  const pills = useMemo(() => sections.slice(0, 6).map((s) => s.title), [sections])
 
   const selectTopic = (id: string) => {
     setActiveId(id)
@@ -135,7 +136,7 @@ export function StudyApp() {
 
         {/* Content */}
         <main className="min-w-0 flex-1 px-5 py-8 sm:px-8 lg:px-12">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto flex max-w-5xl gap-10"><div className="min-w-0 flex-1 max-w-3xl">
             {/* Hero */}
             <header className="relative mb-8 overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/12 to-primary/[0.03] p-7 shadow-lg sm:p-9">
               <div className="pointer-events-none absolute -right-16 -top-16 size-60 rounded-full bg-primary/20 blur-3xl" />
@@ -185,16 +186,59 @@ export function StudyApp() {
             </div>
             <p className="mb-8 text-sm text-muted-foreground">{levelMeta.hint}</p>
 
+            {/* Mini-nav по пунктам (для узких экранов — над контентом) */}
+            {sections.length > 1 && (
+              <nav className="mb-8 rounded-xl border border-border bg-card p-4 xl:hidden">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  На этой странице
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {sections.map((s) => (
+                    <a
+                      key={s.id}
+                      href={`#${s.id}`}
+                      className="rounded-full border border-border bg-card-2 px-3 py-1 text-xs text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {s.title}
+                    </a>
+                  ))}
+                </div>
+              </nav>
+            )}
+
             {/* Blocks */}
             <article>
               {blocks.map((block, i) => (
-                <BlockRenderer key={`${activeId}-${level}-${i}`} block={block} />
+                <BlockRenderer key={`${activeId}-${level}-${i}`} block={block} id={`sec-${i}`} />
               ))}
             </article>
 
             <footer className="mt-12 border-t border-border pt-6 text-sm text-muted-foreground">
               Стек ориентирован на вакансию Fullstack (TypeScript, NestJS + Next.js). Проходи темы по уровням от начального к продвинутому.
             </footer>
+          </div>
+
+          {/* Мини-навигация справа (широкие экраны) */}
+          {sections.length > 1 && (
+            <aside className="hidden w-52 shrink-0 xl:block">
+              <div className="sticky top-8">
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  На этой странице
+                </p>
+                <nav className="flex flex-col gap-1 border-l border-border">
+                  {sections.map((s) => (
+                    <a
+                      key={s.id}
+                      href={`#${s.id}`}
+                      className="-ml-px border-l-2 border-transparent py-1 pl-3 text-sm leading-snug text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    >
+                      {s.title}
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </aside>
+          )}
           </div>
         </main>
       </div>
