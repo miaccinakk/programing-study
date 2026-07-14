@@ -10,6 +10,7 @@ import {
   FlaskConical,
   GitBranch,
   Hexagon,
+  KeyRound,
   ListChecks,
   Menu,
   Server,
@@ -29,6 +30,7 @@ const icons: Record<string, LucideIcon> = {
   Zap,
   Triangle,
   Hexagon,
+  KeyRound,
   Server,
   Database,
   ListChecks,
@@ -42,7 +44,7 @@ const icons: Record<string, LucideIcon> = {
 const groups: { label: string; ids: string[] }[] = [
   { label: "Язык", ids: ["javascript", "typescript"] },
   { label: "Фронтенд", ids: ["react", "vite", "nextjs"] },
-  { label: "Бэкенд", ids: ["nodejs", "nestjs", "postgres", "queues"] },
+  { label: "Бэкенд", ids: ["nodejs", "nestjs", "auth", "postgres", "queues"] },
   { label: "Инфраструктура", ids: ["docker", "git"] },
   { label: "Качество и AI", ids: ["testing", "ai"] },
 ]

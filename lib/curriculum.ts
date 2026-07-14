@@ -132,7 +132,7 @@ function Item({ title, id }) {
             "Стрелочные функции и лексический this",
             "Шаблонные строки `${...}` вместо конкатенации",
             "Деструктуризация объектов и массивов (основа разбора props)",
-            "Параметры по ум��лчанию: function f(x = 10) {}",
+            "Параметры по ум����лчанию: function f(x = 10) {}",
             "Тип-приведение и разница == vs === (всегда строгое ===)",
           ],
         },
@@ -280,7 +280,7 @@ const [users, posts] = await Promise.all([
         {
           type: "text",
           title: "Иммутабельные обновления (основа state)",
-          body: "React и стейт-менеджеры определяют изменение по НОВОЙ ссылке, а не по содержимому. Поэтому массивы и объекты нужно обновлять иммутабельно — создавать копию с изменением, а не мутировать оригинал. Мутирующие методы (push, splice, sort, reverse) меняют исходный массив; их немутирующие аналоги (map, filter, spread, toSorted) возвращают новый. Это одна из самых частых тем на собеседовании про React.",
+          body: "React и стейт-менеджеры определяют изменение по НОВОЙ ссылке, а не по содер��имому. Поэтому массивы и объекты нужно обновлять иммутабельно — создавать копию с изменением, а не мутировать оригинал. Мутирующие методы (push, splice, sort, reverse) меняют исходный массив; их немутирующие аналоги (map, filter, spread, toSorted) возвращают новый. Это одна из самых частых тем на собеседовании про React.",
         },
         {
           type: "code",
@@ -816,7 +816,7 @@ config.port  // остаётся number, а не unknown`,
         {
           type: "text",
           title: "Суть React",
-          body: "React — библиотека для построения UI из компонентов. Главная ментальная модель: UI = f(state). Ты описываешь, как выглядит интерфейс при данном состоянии, а не дёргаешь DOM руками. Когда состояние меняется, React перерисовывает компонент, сравнивает результат (reconciliation через Virtual DOM) и обновляет в реальном DOM только то, что действительно изменилось.",
+          body: "React — библиотека для построения UI из компонентов. Главная ментальная модель: UI = f(state). Ты описываешь, как выглядит интерфейс при данном состоянии, а не дёргаешь DOM руками. Когда состояние меняется, React перерисовывает компонент, сравнивает результат (reconciliation через Virtual DOM) и ��бновляет в реальном DOM только то, что действительно изменилось.",
         },
         {
           type: "text",
@@ -980,7 +980,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
               good: "Обновляй state в обработчиках событий или в useEffect, а не при каждом рендере компонента.",
             },
             {
-              bad: "Читать state сразу после setState и ждать нового значения.",
+              bad: "Читать state сразу после setState и ждать нового значе��ия.",
               good: "setState асинхронный. Новое значение появится на следующем рендере; если нужно опереться на предыдущее — setCount(c => c + 1).",
             },
           ],
@@ -1093,7 +1093,7 @@ function useUser(id: number) {
         {
           type: "text",
           title: "Структура проекта",
-          body: "Для маленького приложения хватает группировки по типу файлов (components/, hooks/, utils/). Но с ростом кода это неудобно — код одной фичи разбросан по папкам. Более масштабируемый подход — feature-based (или feature-sliced): код группируется вокруг фич, а общее переиспользуемое лежит в shared. Главное правило любой структуры — предсказуемость: по имени фичи легко найти всё, что к ней относится.",
+          body: "Для маленького приложения хватает группировки по типу файлов (components/, hooks/, utils/). Но с ростом кода это неудобно — код одной фичи разбросан по папкам. Более масштабируемый подход — feature-based (или feature-sliced): код группируется вокруг фич, а общее переиспользуемое лежит в shared. Главное правило любой структуры — предсказуемость: по имени фичи легко найти всё, что к ней ��тносится.",
         },
         {
           type: "code",
@@ -1875,7 +1875,7 @@ function App() {
         q: "Что Vite использует для прод-сборки?",
         options: ["esbuild", "webpack", "Rollup", "Parcel"],
         answer: 2,
-        explain: "В деве — esbuild + нативные ESM, а для продакшена Vite собирает бандл через Rollup с tree-shaking, минификацией и code splitting.",
+        explain: "В деве — esbuild + нативные ESM, а для продакшена Vite соби��ает бандл через Rollup с tree-shaking, минификацией и code splitting.",
       },
       {
         q: "Что из этого Vite НЕ делает сам по себе?",
@@ -1995,7 +1995,7 @@ npm run dev                 # запустить скрипт "dev"
               good: "node_modules восстанавливается по lock-файлу через npm install, а .env содержит секреты. Оба — в .gitignore.",
             },
             {
-              bad: "Смешивать require и import в одном ESM-проекте и удивляться ошибкам.",
+              bad: "Смешивать require и import в одном ESM-проекте и удивлять��я ошибкам.",
               good: "Определись с системой модулей через \"type\" в package.json и придерживайся её; для встроенных модулей используй префикс node:.",
             },
           ],
@@ -2201,7 +2201,7 @@ if (cluster.isPrimary) {
           "Многопоточная, по потоку на каждый запрос",
           "Однопоточная с неблокирующим асинхронным I/O через event loop",
           "Полностью синхронная",
-          "Многопроцессная по умолчанию",
+          "Многопроцес��ная по умолчанию",
         ],
         answer: 1,
         explain: "Node однопоточный, но неблокирующий: I/O-операции отдаются системе, а результат обрабатывается через event loop. Поэтому он силён в I/O и слаб в тяжёлом CPU.",
@@ -2407,10 +2407,10 @@ create(@Req() req, @Body() dto: CreatePostDto) {
             },
             {
               bad: "Принимать req.body как есть, без валидации.",
-              good: "Описывать DTO с class-validator и включать глобальный ValidationPipe с whitelist: true.",
+              good: "��писывать DTO с class-validator и включать глобальный ValidationPipe с whitelist: true.",
             },
             {
-              bad: "Создавать экземпляры сервисов вручную через new вместо DI.",
+              bad: "Соз��авать экземпляры сервисов вручную через new вместо DI.",
               good: "Регистрировать в providers и получать через конструктор — так работают тесты, скоупы и подмена зависимостей.",
             },
             {
@@ -2465,6 +2465,373 @@ create(@Req() req, @Body() dto: CreatePostDto) {
         ],
         answer: 1,
         explain: "DTO описывает форму входа, а ValidationPipe + class-validator автоматически отклоняют невалидные данные (400) и могут отсекать лишние поля.",
+      },
+    ],
+  },
+  {
+    id: "auth",
+    title: "Авторизация (JWT)",
+    icon: "KeyRound",
+    tagline: "Аутентификация через JWT в связке Node.js + Postgres + React",
+    levels: {
+      junior: [
+        {
+          type: "text",
+          title: "Аутентификация vs авторизация",
+          body: "Два разных понятия, которые часто путают. Аутентификация (authentication) — «кто ты?»: проверка личности по логину и паролю. Авторизация (authorization) — «что тебе можно?»: проверка прав доступа к ресурсу (например, только админ может удалять пользователей). Сначала система аутентифицирует пользователя, а затем на каждом защищённом действии авторизует его.",
+        },
+        {
+          type: "text",
+          title: "Что такое JWT",
+          body: "JWT (JSON Web Token) — это компактный самодостаточный токен, который сервер выдаёт после успешного входа. Он состоит из трёх частей через точку: header.payload.signature. Header описывает алгоритм, payload содержит данные (id пользователя, роль, срок жизни), а signature — подпись секретным ключом сервера. Главная идея: сервер не хранит сессию, а доверяет токену, потому что подпись невозможно подделать без секрета. Payload закодирован в Base64URL, а НЕ зашифрован — читать его может любой.",
+        },
+        {
+          type: "code",
+          lang: "txt",
+          code: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9   <- header (алгоритм)
+.
+eyJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzIwMH0  <- payload (данные)
+.
+SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c   <- signature (подпись)
+
+# header:    { "alg": "HS256", "typ": "JWT" }
+# payload:   { "userId": 1, "role": "user", "exp": 1720000000 }
+# signature: HMACSHA256(base64(header) + "." + base64(payload), SECRET)`,
+        },
+        {
+          type: "text",
+          title: "Как проходит вход по JWT",
+          body: "Поток простой: пользователь шлёт email и пароль → сервер проверяет их в базе → если верно, генерирует JWT и возвращает клиенту → клиент прикладывает токен к каждому следующему запросу в заголовке Authorization: Bearer <token> → сервер проверяет подпись и срок, достаёт userId и понимает, кто перед ним. База (Postgres) хранит пользователей и хэши паролей, Node генерирует и проверяет токены, React хранит токен и шлёт его с запросами.",
+        },
+        {
+          type: "flow",
+          title: "Поток аутентификации",
+          steps: [
+            { title: "Регистрация", body: "React шлёт email+пароль. Node хэширует пароль (bcrypt) и сохраняет пользователя в Postgres." },
+            { title: "Логин", body: "Node находит пользователя по email и сравнивает пароль с хэшем через bcrypt.compare." },
+            { title: "Выдача токена", body: "При успехе Node подписывает JWT с userId и сроком жизни и возвращает его клиенту." },
+            { title: "Запросы", body: "React прикладывает токен в заголовке Authorization: Bearer <token> к защищённым запросам." },
+            { title: "Проверка", body: "Middleware на Node проверяет подпись и срок, достаёт userId и пропускает запрос дальше." },
+          ],
+        },
+        {
+          type: "list",
+          title: "База Junior",
+          items: [
+            "Аутентификация (кто ты) vs авторизация (что можно)",
+            "JWT = header.payload.signature, подписан секретом сервера",
+            "Payload закодирован, а НЕ зашифрован — секреты туда не кладут",
+            "Пароли хранят только как хэш (bcrypt), никогда в открытом виде",
+            "Токен передаётся в заголовке Authorization: Bearer <token>",
+            "Stateless: сервер не хранит сессию, доверяет подписи токена",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "warn",
+          body: "Payload JWT легко декодируется любым (это просто Base64) — НИКОГДА не клади туда пароли, номера карт и прочие секреты. Токен защищён от подделки подписью, но не от чтения. В payload — только неконфиденциальные данные вроде userId и роли.",
+        },
+        {
+          type: "mistakes",
+          title: "Ошибки новичка в авторизации",
+          items: [
+            {
+              bad: "Хранить пароли в базе в открытом виде или с обратимым «шифрованием».",
+              good: "Всегда хэшируй пароль односторонним алгоритмом (bcrypt/argon2) с солью. Проверка — через bcrypt.compare, расшифровать хэш нельзя.",
+            },
+            {
+              bad: "Класть в payload JWT чувствительные данные, считая токен «зашифрованным».",
+              good: "Payload только закодирован Base64 и читается кем угодно. Храни там лишь id и роль.",
+            },
+            {
+              bad: "Делать токен бессрочным ради удобства.",
+              good: "Всегда задавай короткий срок жизни (exp). Для «долгого» входа используй refresh-токен.",
+            },
+          ],
+        },
+      ],
+      middle: [
+        {
+          type: "text",
+          title: "Регистрация и хэширование пароля (Node + Postgres)",
+          body: "Пароль никогда не сохраняют как есть — только его хэш. bcrypt добавляет случайную соль и намеренно медленный, чтобы затруднить перебор. При регистрации хэшируем пароль и пишем пользователя в Postgres; при логине сравниваем введённый пароль с хэшем через bcrypt.compare.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+
+// РЕГИСТРАЦИЯ
+export async function register(req, res) {
+  const { email, password } = req.body
+  const hash = await bcrypt.hash(password, 10)   // соль + 10 раундов
+
+  const { rows } = await db.query(
+    "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email",
+    [email, hash]                                 // параметризованный запрос!
+  )
+  res.status(201).json({ user: rows[0] })
+}
+
+// ЛОГИН
+export async function login(req, res) {
+  const { email, password } = req.body
+  const { rows } = await db.query("SELECT * FROM users WHERE email = $1", [email])
+  const user = rows[0]
+
+  // одинаковая ошибка и для «нет юзера», и для «неверный пароль»
+  if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+    return res.status(401).json({ error: "Неверный email или пароль" })
+  }
+
+  const token = jwt.sign(
+    { userId: user.id, role: user.role },        // payload
+    process.env.JWT_SECRET,                       // секрет
+    { expiresIn: "15m" }                          // короткий срок
+  )
+  res.json({ token })
+}`,
+        },
+        {
+          type: "code",
+          lang: "sql",
+          code: `-- Таблица пользователей в Postgres
+CREATE TABLE users (
+  id            SERIAL PRIMARY KEY,
+  email         TEXT UNIQUE NOT NULL,   -- уникальный индекс = быстрый поиск + защита от дублей
+  password_hash TEXT NOT NULL,          -- храним ТОЛЬКО хэш
+  role          TEXT NOT NULL DEFAULT 'user',
+  created_at    TIMESTAMPTZ DEFAULT now()
+);`,
+        },
+        {
+          type: "text",
+          title: "Middleware проверки токена",
+          body: "Защищённые маршруты закрывают middleware: оно достаёт токен из заголовка Authorization, проверяет подпись и срок через jwt.verify, кладёт данные пользователя в req.user и передаёт управление дальше. Если токен отсутствует или невалиден — сразу 401. Для проверки прав добавляют отдельное middleware по роли (авторизация).",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// Аутентификация: есть ли валидный токен
+export function authRequired(req, res, next) {
+  const header = req.headers.authorization ?? ""
+  const token = header.startsWith("Bearer ") ? header.slice(7) : null
+  if (!token) return res.status(401).json({ error: "Нет токена" })
+
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET)  // { userId, role }
+    next()
+  } catch {
+    return res.status(401).json({ error: "Токен невалиден или истёк" })
+  }
+}
+
+// Авторизация: проверка роли
+export function requireRole(role) {
+  return (req, res, next) => {
+    if (req.user.role !== role) {
+      return res.status(403).json({ error: "Недостаточно прав" })
+    }
+    next()
+  }
+}
+
+// применение
+app.get("/me", authRequired, (req, res) => res.json({ id: req.user.userId }))
+app.delete("/users/:id", authRequired, requireRole("admin"), deleteUser)`,
+        },
+        {
+          type: "text",
+          title: "Хранение токена в React",
+          body: "На клиенте токен нужно где-то держать и прикладывать к запросам. Простой способ — в памяти или localStorage, но localStorage уязвим к XSS (вредоносный скрипт прочитает токен). Более безопасно — httpOnly cookie (JS не имеет к ней доступа), но тогда нужна защита от CSRF. Централизуй логику в одном месте: перехватчик (interceptor) добавляет заголовок автоматически.",
+        },
+        {
+          type: "code",
+          lang: "tsx",
+          code: `// Клиент оборачивает fetch и подставляет токен
+async function apiFetch(url: string, options: RequestInit = {}) {
+  const token = localStorage.getItem("token")
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: \`Bearer \${token}\` } : {}),
+    },
+  })
+  if (res.status === 401) {
+    localStorage.removeItem("token")   // токен протух — на страницу входа
+    window.location.href = "/login"
+  }
+  return res
+}
+
+// Логин: сохраняем токен
+async function login(email: string, password: string) {
+  const res = await fetch("/api/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  })
+  const { token } = await res.json()
+  localStorage.setItem("token", token)
+}`,
+        },
+        {
+          type: "list",
+          title: "Уровень Middle",
+          items: [
+            "bcrypt для хэширования пароля, bcrypt.compare для проверки",
+            "jwt.sign при логине и jwt.verify в middleware",
+            "Параметризованные SQL-запросы ($1, $2) против инъекций",
+            "Разделение authRequired (аутентификация) и requireRole (авторизация)",
+            "Хранение токена: localStorage (риск XSS) vs httpOnly cookie (риск CSRF)",
+            "Одинаковая ошибка для неверного email и пароля (не выдавать, что есть аккаунт)",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          body: "JWT_SECRET — это ключ ко всей системе. Держи его в переменных окружения (.env, не в git), делай длинным и случайным. Утечка секрета = злоумышленник сможет выпустить валидный токен для любого пользователя.",
+        },
+      ],
+      advanced: [
+        {
+          type: "text",
+          title: "Access и refresh токены",
+          body: "Дилемма: короткий срок жизни токена безопаснее, но заставляет часто логиниться; длинный — удобнее, но опаснее при краже. Решение — пара токенов. Access-токен короткоживущий (5–15 минут) и шлётся с каждым запросом. Refresh-токен долгоживущий (дни/недели), хранится в httpOnly cookie и используется только чтобы получить новый access-токен, когда старый истёк. Refresh-токены обычно хранят в БД, чтобы их можно было отозвать.",
+        },
+        {
+          type: "code",
+          lang: "js",
+          code: `// Выдаём пару токенов при логине
+const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15m" })
+const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" })
+
+// refresh — в httpOnly cookie, недоступную JS (защита от XSS)
+res.cookie("refreshToken", refreshToken, {
+  httpOnly: true,
+  secure: true,          // только по HTTPS
+  sameSite: "strict",    // защита от CSRF
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+})
+res.json({ accessToken })
+
+// Обновление access-токена по refresh
+export async function refresh(req, res) {
+  const token = req.cookies.refreshToken
+  try {
+    const { userId } = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
+    // проверяем, что токен ещё активен в БД (не отозван)
+    const valid = await db.query("SELECT 1 FROM refresh_tokens WHERE token = $1", [token])
+    if (!valid.rowCount) return res.status(401).json({ error: "Отозван" })
+
+    const accessToken = jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: "15m" })
+    res.json({ accessToken })
+  } catch {
+    res.status(401).json({ error: "Refresh невалиден" })
+  }
+}`,
+        },
+        {
+          type: "text",
+          title: "Отзыв токенов и logout",
+          body: "Главная слабость stateless JWT: его нельзя «отозвать» до истечения срока — сервер не хранит состояние. Поэтому access делают короткоживущим. Настоящий logout и блокировку реализуют через refresh-токены в БД: при выходе строку удаляют, и обновить access больше не получится. Для мгновенного отзыва access используют blacklist в Redis (по jti — уникальному id токена).",
+        },
+        {
+          type: "table",
+          title: "JWT vs сессии на сервере",
+          headers: ["Критерий", "JWT (stateless)", "Сессии (stateful)"],
+          rows: [
+            ["Хранение состояния", "Нет, всё в токене", "На сервере (память/Redis/БД)"],
+            ["Масштабирование", "Легко, любой инстанс проверит подпись", "Нужно общее хранилище сессий"],
+            ["Отзыв доступа", "Сложно (нужен blacklist)", "Просто — удалить сессию"],
+            ["Размер запроса", "Больше (токен в каждом запросе)", "Меньше (только id сессии)"],
+            ["Подходит для", "API, микросервисы, мобильные", "Классические веб-приложения"],
+          ],
+        },
+        {
+          type: "list",
+          title: "Что показать как сильный кандидат",
+          items: [
+            "Схема access + refresh, где что хранится и зачем",
+            "Почему stateless JWT сложно отозвать и как это решают (короткий срок, blacklist, БД refresh)",
+            "httpOnly + secure + sameSite cookie против XSS и CSRF",
+            "Ротация refresh-токенов и обнаружение переиспользования (reuse detection)",
+            "Выбор алгоритма подписи: HS256 (общий секрет) vs RS256 (пара ключей)",
+            "Защита: rate limiting на /login, блокировка перебора, одинаковые тексты ошибок",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "key",
+          body: "Правило распределения: access-токен — в память/переменную (короткий, шлётся с запросами), refresh-токен — в httpOnly cookie (долгий, недоступен JS). Так минимизируется ущерб и от XSS (не украдут refresh), и от истечения (access тихо обновляется).",
+        },
+        {
+          type: "mistakes",
+          title: "Частые ошибки",
+          items: [
+            {
+              bad: "Считать, что logout на клиенте (удаление токена) реально завершает сессию.",
+              good: "Удаление на клиенте не инвалидирует токен на сервере — он валиден до exp. Нужны короткий срок access и отзыв refresh в БД.",
+            },
+            {
+              bad: "Хранить refresh-токен в localStorage.",
+              good: "localStorage уязвим к XSS. Refresh держи в httpOnly + secure + sameSite cookie.",
+            },
+            {
+              bad: "Использовать алгоритм none или не проверять alg при verify.",
+              good: "Явно указывай ожидаемый алгоритм в jwt.verify. Приём токенов с alg: none — классическая уязвимость.",
+            },
+          ],
+        },
+      ],
+    },
+    quiz: [
+      {
+        q: "В чём разница между аутентификацией и авторизацией?",
+        options: [
+          "Это одно и то же",
+          "Аутентификация — «кто ты» (проверка личности), авторизация — «что тебе можно» (проверка прав)",
+          "Аутентификация — про роли, авторизация — про пароли",
+          "Авторизация выполняется раньше аутентификации",
+        ],
+        answer: 1,
+        explain: "Сначала система устанавливает личность (аутентификация по паролю), а затем проверяет права на конкретное действие (авторизация по роли).",
+      },
+      {
+        q: "Можно ли хранить пароль пользователя в payload JWT?",
+        options: [
+          "Да, ведь токен зашифрован",
+          "Нет — payload только закодирован Base64 и читается кем угодно",
+          "Да, если использовать HS256",
+          "Можно, если срок токена короткий",
+        ],
+        answer: 1,
+        explain: "Payload JWT не шифруется, а лишь кодируется в Base64URL — любой может его декодировать. Подпись защищает от подделки, но не от чтения.",
+      },
+      {
+        q: "Зачем нужен refresh-токен рядом с access-токеном?",
+        options: [
+          "Чтобы увеличить размер запроса",
+          "Чтобы держать access короткоживущим (безопасно), но не заставлять часто логиниться",
+          "Чтобы заменить пароль",
+          "Refresh-токен шлётся с каждым запросом вместо access",
+        ],
+        answer: 1,
+        explain: "Access делают коротким ради безопасности, а долгоживущий refresh (в httpOnly cookie) позволяет тихо получать новый access без повторного входа.",
+      },
+      {
+        q: "Почему logout сложнее реализовать с stateless JWT?",
+        options: [
+          "JWT нельзя удалить из браузера",
+          "Сервер не хранит состояние, поэтому валидный токен работает до истечения exp",
+          "JWT не поддерживает logout в принципе",
+          "Нужно менять JWT_SECRET при каждом выходе",
+        ],
+        answer: 1,
+        explain: "Stateless-токен валиден до exp, и сервер о нём «не помнит». Поэтому access делают коротким, а настоящий отзыв реализуют через refresh в БД или blacklist.",
       },
     ],
   },
@@ -3013,7 +3380,7 @@ volumes:
             },
             {
               bad: "Ребилдить образ на каждый чих: docker compose up без учёта кэша.",
-              good: "compose переиспользует образ. Пересобирай явно (--build) только когда менялся Dockerfile или зависимости.",
+              good: "compose переиспользует образ. Пересобирай явно (--build) только ��огда менялся Dockerfile или зависимости.",
             },
           ],
         },
@@ -3588,7 +3955,7 @@ const { embedding } = await embed({ model: "openai/text-embedding-3-small", valu
             },
             {
               bad: "Пихать в промпт весь контекст и всю историю без ограничений.",
-              good: "Держать компактный сивтемный промпт, обрезать историю и подмешивать только релевантные куски (RAG).",
+              good: "Держат�� компактный сивтемный промпт, обрезать историю и подмешивать только релевантные куски (RAG).",
             },
             {
               bad: "Вставлять пользовательский текст прямо в инструкцию модели.",
