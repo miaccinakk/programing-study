@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import {
   Atom,
+  Braces,
   Container,
   Database,
   FileType,
@@ -14,14 +15,17 @@ import {
   Sparkles,
   Triangle,
   X,
+  Zap,
   type LucideIcon,
 } from "lucide-react"
 import { curriculum, LEVELS, type Level } from "@/lib/curriculum"
 import { BlockRenderer } from "@/components/block-renderer"
 
 const icons: Record<string, LucideIcon> = {
+  Braces,
   FileType,
   Atom,
+  Zap,
   Triangle,
   Server,
   Database,
@@ -34,8 +38,8 @@ const icons: Record<string, LucideIcon> = {
 
 // Группировка тем для боковой навигации (как nav-group в мануале)
 const groups: { label: string; ids: string[] }[] = [
-  { label: "Язык", ids: ["typescript"] },
-  { label: "Фронтенд", ids: ["react", "nextjs"] },
+  { label: "Язык", ids: ["javascript", "typescript"] },
+  { label: "Фронтенд", ids: ["react", "vite", "nextjs"] },
   { label: "Бэкенд", ids: ["nestjs", "postgres", "queues"] },
   { label: "Инфраструктура", ids: ["docker", "git"] },
   { label: "Качество и AI", ids: ["testing", "ai"] },
